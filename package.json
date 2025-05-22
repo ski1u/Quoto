@@ -13,6 +13,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "apollo-server-micro": "^3.13.0",
     "autoprefixer": "10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
