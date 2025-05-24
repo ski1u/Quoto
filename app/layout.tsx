@@ -1,9 +1,11 @@
-import { Geist } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 import { ApolloProvider } from "@apollo/client";
 import { client } from "@/utils/graphql/apollo-client";
+
+import { AppProvider } from "@/components/AppProvider";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -11,11 +13,11 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Quoto",
+  description: "",
 };
 
-const geistSans = Geist({
+const geistSans = Inter({
   display: "swap",
   subsets: ["latin"],
 });
@@ -28,16 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ApolloProvider client={client}>
-            {children}
-          </ApolloProvider>
-        </ThemeProvider>
+              {children}
       </body>
     </html>
   );

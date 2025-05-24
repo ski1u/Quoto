@@ -30,3 +30,13 @@ export const typeDefs = gql`
         deleteQuoto(): Quoto
     }
 `
+
+export type quotoInit = {
+    id: string,
+    author: string,
+    quoto: string,
+    tags: string[],
+    likes: number,
+    isUser: boolean, 
+    created_at: string
+}
