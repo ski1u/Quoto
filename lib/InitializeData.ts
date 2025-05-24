@@ -21,7 +21,7 @@ export async function initializeData(): Promise<{
     const { data: quotos, error: quotosError } = await supabase.from("quotos").select("*")
     if (quotosError) throw new Error(quotosError.message)
 
-    if (user && !user.user_metadata["full-name"]) redirect("/upboarding")
+    if (user && !user.user_metadata["full-name"]) redirect("/main/upboarding")
     
     return {
         user: user || undefined,

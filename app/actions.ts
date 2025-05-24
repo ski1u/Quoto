@@ -5,6 +5,8 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { Provider } from "@supabase/supabase-js";
+
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
@@ -55,6 +57,18 @@ export const signInAction = async (formData: FormData) => {
   
   return redirect("/main");
 };
+
+export async function signInWithOAuthAction(provider: Provider, redirectRoute: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {redirectTo: redirectRoute}
+  })
+  if (error) {throw new Error(error.message); redirect("/sign-in")}
+
+  redirect(data.url)
+}
 
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
