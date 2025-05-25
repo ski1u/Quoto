@@ -1,11 +1,8 @@
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
-import { ApolloProvider } from "@apollo/client";
-import { client } from "@/utils/graphql/apollo-client";
-
 import { AppProvider } from "@/components/AppProvider";
+import { Providers } from "@/components/Providers";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -17,10 +14,10 @@ export const metadata = {
   description: "",
 };
 
-const geistSans = Inter({
-  display: "swap",
-  subsets: ["latin"],
-});
+const inter = Inter({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin", "greek"]
+})
 
 export default function RootLayout({
   children,
@@ -28,9 +25,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={geistSans.className} suppressHydrationWarning>
-      <body className="bg-background text-foreground">
-              {children}
+    <html lang="en" className={inter.className} suppressHydrationWarning>
+      <body className="bg-[#f9f9f9] text-foreground">
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

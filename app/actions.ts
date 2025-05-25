@@ -7,9 +7,24 @@ import { redirect } from "next/navigation";
 
 import { Provider } from "@supabase/supabase-js";
 
-export const signUpAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
-  const password = formData.get("password")?.toString();
+export const upboardAction = async (formData: { full_name: string }) => {
+  const {  } = formData
+
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.updateUser({
+    data: {
+
+    }
+  }); if (error) return encodedRedirect("error", "/sign-in", error.message);
+
+  // ---
+
+  return redirect("/main")
+}
+
+export const signUpAction = async (formData: { email: string, password: string }) => {
+  const { email, password } = formData
+
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
@@ -41,9 +56,8 @@ export const signUpAction = async (formData: FormData) => {
   }
 };
 
-export const signInAction = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+export const signInAction = async (formData: { email: string, password: string }) => {
+  const { email, password } = formData
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -70,11 +84,11 @@ export async function signInWithOAuthAction(provider: Provider, redirectRoute: s
   redirect(data.url)
 }
 
-export const forgotPasswordAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
+export const forgotPasswordAction = async (formData: { email: string, callbackUrl: string }) => {
+  const { email, callbackUrl } = formData
+
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
-  const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
     return encodedRedirect("error", "/forgot-password", "Email is required");
