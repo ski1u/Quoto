@@ -30,11 +30,12 @@ export function AppProvider({
     useEffect(() => {
         initializeData()
             .then(result => {
-                if (result?.user) {
+                const user = result?.user
+
+                if (user) {
                     setData(result)
-                    if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
-                        router.push('/main')
-                    }
+                    if (user.user_metadata["full_name"] && (pathname.startsWith("/main/upboarding") || pathname.startsWith("/sign-in") || pathname.startsWith("sign-up"))) router.push('/main')
+                    else if (!user.user_metadata["full_name"] && !pathname.startsWith("/main/upboarding")) router.push("/main/upboarding")
                 }
                 setLoading(false)
             })

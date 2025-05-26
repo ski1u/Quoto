@@ -7,14 +7,15 @@ import { redirect } from "next/navigation";
 
 import { Provider } from "@supabase/supabase-js";
 
-export const upboardAction = async (formData: { full_name: string }) => {
-  const {  } = formData
+import { upboarding_questions_schema as qSchema } from "@/data/upboarding-questions-data";
+import { z } from "zod";
+
+export const upboardAction = async (formData: z.infer<typeof qSchema>) => {
+  const { full_name, how_found, role, preference } = formData
 
   const supabase = await createClient()
   const { data, error } = await supabase.auth.updateUser({
-    data: {
-
-    }
+    data: { full_name, how_found, role, preference }
   }); if (error) return encodedRedirect("error", "/sign-in", error.message);
 
   // ---
