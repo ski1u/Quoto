@@ -23,7 +23,7 @@ export const upboarding_questions_data = [
     {
       id: 'preference',
       question: "What types of quotes do you enjoy?",
-      type: 'select',
+      type: 'multi-select',
       options: ['Motivational', 'Spiritual', 'Mental Health', 'Philosophical'],
     },
 ]
