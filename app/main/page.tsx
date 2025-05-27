@@ -2,9 +2,12 @@
 
 import React from 'react'
 
-import { useApp } from '@/components/AppProvider'
+import { Button } from '@/components/ui/button'
 
+import { useApp } from '@/components/AppProvider'
 import { useRouter } from 'next/navigation'
+
+import { signOutAction } from '../actions'
 
 const Main = () => {
   const { user, quotos } = useApp()
@@ -17,7 +20,10 @@ const Main = () => {
   // ---
 
   return (
-    <div>Your name is {user?.user_metadata["full_name"]}</div>
+    <div>
+      <div>Your name is {user?.user_metadata["full_name"]}</div>
+      <Button onClick={signOutAction}></Button>
+    </div>
   )
 }
 

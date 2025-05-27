@@ -6,27 +6,26 @@ import AuthPages from '@/components/ui/auth-pages'
 import AuthPageSide from '@/components/ui/auth-page-side'
 
 import { z } from "zod"
-import { signInAction } from '../actions'
+import { signUpAction } from '../actions'
 
-const SignIn = () => {
+const SignUp = () => {
     return (
         <AuthPageSide>
             <AuthPages
                 fields={["email", "password"]}
-                title="Sign In"
-                submitLabel='Sign In'
-                footerLabel='Dont have an account?'
-                footerLabelLink='Sign Up'
-                footerLink='/sign-up'
+                title="Sign Up"
+                submitLabel='Sign Up'
+                footerLabel='Already have an account?'
+                footerLabelLink='Sign In'
+                footerLink='/sign-in'
                 zodSchema={z.object({email: z.string().email(), password: z.string().min(8, "Password must be 8 characters long or more ")})}
                 zodDefault={{email: "", password: ""}}
-                submitHandler={signInAction}
+                submitHandler={signUpAction}
                 googleOAuth
                 OAuthClassname='fill-black'
-                forgotPassword
-                />
+            />
         </AuthPageSide>
     )
 }
 
-export default SignIn
+export default SignUp
