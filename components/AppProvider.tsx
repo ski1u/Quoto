@@ -13,6 +13,7 @@ import { useRouter, usePathname } from "next/navigation";
 export interface AppData {
     user?: User
     quotos?: Array<quotoInit>
+    handleLoading: (v: boolean) => void
 }
 
 const AppContext = createContext<AppData | null>(null)
@@ -20,7 +21,7 @@ const AppContext = createContext<AppData | null>(null)
 export function AppProvider({
     children
 } : { children: React.ReactNode }) {
-    const [data, setData] = useState<AppData | null>(null)
+    const [data, setData] = useState<{ user?: User, quotos?: Array<quotoInit> } | null>(null)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
     const pathname = usePathname()
@@ -42,13 +43,22 @@ export function AppProvider({
             .catch(() => setLoading(false))
     }, [pathname, router])
 
+    const handleLoading = (v: boolean) => setLoading(v)
+
     // ---
 
     if (loading) return <LoadingScreen />
+    
+    // ---
 
-    return (
-        <AppContext.Provider value={data}>
-            {children}
+    const providerData = {
+        ...data,
+        handleLoading
+    }
+
+    return !loading && (
+        <AppContext.Provider value={providerData}>
+            {loading ? <LoadingScreen/> : children}
         </AppContext.Provider>
     )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import LoadingScreen from "@/components/ui/loading-screen";
 
@@ -10,7 +10,7 @@ export default function PreUpboarding({ children } : {
   children : React.ReactNode
 }) {
   const router = useRouter()
-  router.push("/sign-in")
+  useEffect(() => router.push("/sign-in"), [router])
 
   return <LoadingScreen/>
 }

@@ -2,12 +2,21 @@
 
 import React from 'react'
 
-import { Button } from '@/components/ui/button'
+import QuotoCard from '@/components/ui/quoto-card'
+import Searchbar from '@/components/ui/searchbar'
 
 import { useApp } from '@/components/AppProvider'
 import { useRouter } from 'next/navigation'
 
-import { signOutAction } from '../actions'
+const dummy = {
+  id: "0",
+  quoto: "In order to conquer the world, you must master yourself.",
+  author: "Marcus Aurelius",
+  tags: ["philosophy"],
+  likes: 54,
+  featured: true,
+  created_at: ""
+}
 
 const Main = () => {
   const { user, quotos } = useApp()
@@ -20,9 +29,16 @@ const Main = () => {
   // ---
 
   return (
-    <div>
-      <div>Your name is {user?.user_metadata["full_name"]}</div>
-      <Button onClick={signOutAction}></Button>
+    <div
+      className='h-screen w-screen p-8 space-y-6'
+    >
+      <Searchbar/>
+
+      <div className='flex justify-center'>
+        <div className='w-2/3 grid grid-cols-4'>
+          <QuotoCard args={dummy} />
+        </div>
+      </div>
     </div>
   )
 }
