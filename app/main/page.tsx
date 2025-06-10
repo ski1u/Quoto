@@ -14,12 +14,13 @@ import quotoLogo from "@/assets/quoto-logo.svg"
 
 const dummy = {
   id: "0",
+  user_id: "ca1ffc7d-52a3-4ad7-b6f8-b6e50c887b7a",
   quoto: "In order to conquer the world, you must master yourself.",
   author: "Marcus Aurelius",
   tags: ["philosophy", "philo", "philosophy"],
   likes: 54,
   featured: true,
-  created_at: ""
+  created_at: "",
 }
 
 const Main = () => {
@@ -47,7 +48,7 @@ const Main = () => {
 
       <div className='flex justify-center'>
         <div className='w-2/3 grid grid-cols-4'>
-          <QuotoCard args={dummy} />
+          <QuotoCard args={dummy} user={user} />
         </div>
       </div>
     </div>

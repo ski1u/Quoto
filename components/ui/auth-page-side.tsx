@@ -10,6 +10,7 @@ import quotoLogo from "@/assets/quoto-logo.svg"
 import quotations from "@/assets/quotations.svg"
 
 import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 const AuthPageSide = ({ className, children } : {
     className?: string
@@ -39,7 +40,7 @@ const AuthPageSide = ({ className, children } : {
                 alt='quoto-logo' src={quotoLogo} width={108} height={108}
                 onClick={() => router.push("/")}
             />
-            <div className={className}>{children}</div>
+            <div className={cn("w-[60%]", className)}>{children}</div>
         </div>
 
         <div className='w-2/3 flex justify-center items-center'>

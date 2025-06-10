@@ -4,28 +4,55 @@ import React from 'react'
 
 import { Avatar, AvatarFallback } from './avatar'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import { Card } from './card'
 import { Badge } from './badge'
+import { Button } from './button'
 
-import { Heart, Bookmark, Ellipsis } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { Heart, Bookmark, Ellipsis, Trash2, Edit, Copy } from 'lucide-react'
 
 import Image from 'next/image'
 import quotations from "@/assets/quotations.svg"
 
-const QuotoCard = ({ args } : {
+import { User } from '@supabase/supabase-js'
+
+const TooltipButton = ({ children, text } : {
+    children: React.ReactNode
+    text: string
+}) => {
+    return (
+        <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
+            <TooltipContent side='right'>{text}</TooltipContent>
+        </Tooltip>
+    )
+}
+
+const QuotoCard = ({ args, user } : {
     args: {
         id: string
+        user_id: string
         quoto: string
         author: string
         tags: string[]
         likes: number
         featured: boolean
         created_at?: string
-    }
+    },
+    user: User | undefined
 }) => {
-    const { id, quoto, author, tags, likes, featured, created_at } = args
+    const { id, user_id, quoto, author, tags, likes, featured, created_at } = args
+    const userId = user?.id
+
+    const onCopyQuoto = () => {
+        navigator.clipboard.writeText(`"${quoto}"`)
+        toast.success("Successfully copied quoto")
+    }
     
     return (
+        <TooltipProvider>
         <Card
             className='p-3 z-[1]'
         >
@@ -81,15 +108,27 @@ const QuotoCard = ({ args } : {
                         </PopoverTrigger>
 
                         <PopoverContent
-                            className='w-fit'
+                            className='w-fit p-2 flex flex-col gap-1'
                             side='top'
                         >
-                            
+                            <TooltipButton text='Copy Quoto'>
+                                <Button size="sm"
+                                    variant="outline"
+                                    onClick={onCopyQuoto}
+                                ><Copy/></Button>
+                            </TooltipButton>
+
+                            {userId === user_id && 
+                            <>
+                                <TooltipButton text='Edit'><Button size="sm"><Edit/></Button></TooltipButton>
+                                <TooltipButton text='Delete'><Button size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
+                            </>}
                         </PopoverContent>
                     </Popover>
                 </div>
             </div>
         </Card>
+        </TooltipProvider>
     )
 }
 
