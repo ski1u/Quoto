@@ -18,6 +18,10 @@ import quotations from "@/assets/quotations.svg"
 
 import { User } from '@supabase/supabase-js'
 
+import { cn } from '@/lib/utils'
+
+import { likeQuoto, bookmarkQuoto } from '@/app/main/action'
+
 const TooltipButton = ({ children, text } : {
     children: React.ReactNode
     text: string
@@ -46,10 +50,21 @@ const QuotoCard = ({ args, user } : {
     const { id, user_id, quoto, author, tags, likes, featured, created_at } = args
     const userId = user?.id
 
-    const onCopyQuoto = () => {
-        navigator.clipboard.writeText(`"${quoto}"`)
-        toast.success("Successfully copied quoto")
-    }
+    // ---
+
+    const liked_quotos = user?.user_metadata?.liked_quotos as string[] | undefined
+    const bookmarked_quotos = user?.user_metadata?.bookmarked_quotos as string[] | undefined
+
+    const userLiked = liked_quotos?.includes(id)
+    const userBookmarked = bookmarked_quotos?.includes(id)
+
+    // ---
+
+    const tagWordCount = tags.join("").length
+
+    // ---
+
+    const onCopyQuoto = () => {navigator.clipboard.writeText(`"${quoto}"`); toast.success("Successfully copied quoto")}
     
     return (
         <TooltipProvider>
@@ -81,22 +96,38 @@ const QuotoCard = ({ args, user } : {
                 <p className='text-lg font-bold leading-tight tracking-tight'>{quoto}</p>
 
                 <div className='flex flex-wrap mt-2 gap-1'>
-                    {tags.slice(0,5).map((tag, tagIndex) => (
+                    {tagWordCount < 75 ? tags.map((tag, tagIndex) => (
                         <Badge
                             className="rounded-full text-[10px] cursor-pointer"
                             key={`tag-${tagIndex}`}>{tag}</Badge>
+                    )) : tags.slice(0, Math.floor(tags.length / 2)).map((tag, tagIndex) => (
+                        <>
+                            <Badge
+                            className="rounded-full text-[10px] cursor-pointer"
+                            key={`tag-${tagIndex}`}>{tag}</Badge>
+                        </>
                     ))}
+                    {tagWordCount > 75 && <p className='text-sm text-gray-800'>...</p>}
                 </div>
 
                 <div className='mt-4 flex items-center space-x-2 relative'>
-                    <div className='flex items-center space-x-1 cursor-pointer'>
-                        <Heart size={16} />
+                    <div
+                        className='flex items-center space-x-1 cursor-pointer'
+                        onClick={() => {}}
+                    >
+                        <Heart
+                            size={16}
+                            className={userLiked ? "fill-red-400" : "hover:fill-red-300"}
+                            strokeWidth={userLiked ? 0 : 2}
+                        />
                         <p className='font-medium text-sm'>{likes}</p>
                     </div>
 
                     <Bookmark
                         size={16}
-                        className='cursor-pointer'    
+                        className={cn(userBookmarked ? "fill-yellow-400" : "hover:fill-yellow-300", "cursor-pointer")}
+                        strokeWidth={userBookmarked ? 0 : 2}
+                        onClick={() => {}}
                     />
 
                     <Popover>

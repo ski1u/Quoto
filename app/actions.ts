@@ -14,8 +14,10 @@ export const upboardAction = async (formData: z.infer<typeof qSchema>) => {
   const { full_name, how_found, role, preference } = formData
 
   const supabase = await createClient()
-  const { data, error } = await supabase.auth.updateUser({
-    data: { full_name, how_found, role, preference }
+  const { error } = await supabase.auth.updateUser({
+    data: { full_name, how_found, role, preference,
+      liked_quotos: [], bookmarked_quotos: []
+    }
   }); if (error) return encodedRedirect("error", "/sign-in", error.message);
 
   // ---

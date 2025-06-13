@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react'
 
 import QuotoCard from '@/components/ui/quoto-card'
+import QuotoButton from '@/components/ui/quotoButton'
 import Searchbar from '@/components/ui/searchbar'
 
 import { useApp } from '@/components/AppProvider'
@@ -17,7 +18,7 @@ const dummy = {
   user_id: "ca1ffc7d-52a3-4ad7-b6f8-b6e50c887b7a",
   quoto: "In order to conquer the world, you must master yourself.",
   author: "Marcus Aurelius",
-  tags: ["philosophy", "philo", "philosophy"],
+  tags: ["aisjfkgmaisifjfjdjgn", "aisjfkgmaisifjfjdjgn", "aisjfkgmaisifjfjdjgn"],
   likes: 54,
   featured: true,
   created_at: "",
@@ -37,10 +38,12 @@ const Main = () => {
     <div
       className='h-screen w-screen p-1 space-y-6'
     >
+      <QuotoButton/>
+
       <Image
         alt="quoto-logo"
         src={quotoLogo}
-        className='absolute top-8 left-12 cursor-pointer'
+        className='absolute top-2 left-8 cursor-pointer'
         width={108}
         onClick={() => router.push("/")}
       />
