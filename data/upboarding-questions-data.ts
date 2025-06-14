@@ -58,7 +58,13 @@ export const upboarding_questions_data: upboarding_questions_data_type = [
 ]
 
 export const upboarding_questions_schema = z.object({
-  full_name: z.string().min(3, { message: "Name should be larger than 3 characters" }).max(32, { message: "Name should not be larger than 32 characters" }),
+  full_name: z
+    .string()
+    .min(3, { message: "Name should be larger than 3 characters" })
+    .max(32, { message: "Name should not be larger than 32 characters" })
+    .regex(/^[a-zA-Z0-9 ]*$/, {
+      message: "Name should only contain letters, numbers, and spaces",
+    }),
   how_found: z.enum(['friend', 'instagram', 'search-engine', 'github', 'other'], { required_error: "Please select how you found this app" }),
   role: z.enum(['creator', 'seeker', 'both'], { required_error: "Please select your role" }),
   preference: z.array(z.string()).optional(),

@@ -19,6 +19,7 @@ import quotations from "@/assets/quotations.svg"
 import { User } from '@supabase/supabase-js'
 
 import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
 
 import { likeQuoto, bookmarkQuoto } from '@/app/main/action'
 
@@ -34,7 +35,7 @@ const TooltipButton = ({ children, text } : {
     )
 }
 
-const QuotoCard = ({ args, user } : {
+const QuotoCard = ({ args, user, className } : {
     args: {
         id: string
         user_id: string
@@ -45,7 +46,8 @@ const QuotoCard = ({ args, user } : {
         featured: boolean
         created_at?: string
     },
-    user: User | undefined
+    user: User | undefined,
+    className?: string
 }) => {
     const { id, user_id, quoto, author, tags, likes, featured, created_at } = args
     const userId = user?.id
@@ -67,9 +69,8 @@ const QuotoCard = ({ args, user } : {
     const onCopyQuoto = () => {navigator.clipboard.writeText(`"${quoto}"`); toast.success("Successfully copied quoto")}
     
     return (
-        <TooltipProvider>
         <Card
-            className='p-3 z-[1]'
+            className={cn('p-3 z-[1] w-fit h-fit break-inside-avoid', className)}
         >
             <div className='flex items-center gap-2'>
                 <Avatar
@@ -81,7 +82,7 @@ const QuotoCard = ({ args, user } : {
                     <p className='text-gray-400 text-xs'>
                         {featured ? (
                             "Featured"
-                        ) : created_at}
+                        ) : created_at ? format(created_at, "MMM do, yyyy") : ""}
                     </p>
                 </div>
             </div>
@@ -142,24 +143,25 @@ const QuotoCard = ({ args, user } : {
                             className='w-fit p-2 flex flex-col gap-1'
                             side='top'
                         >
-                            <TooltipButton text='Copy Quoto'>
-                                <Button size="sm"
-                                    variant="outline"
-                                    onClick={onCopyQuoto}
-                                ><Copy/></Button>
-                            </TooltipButton>
+                            <TooltipProvider>
+                                <TooltipButton text='Copy Quoto'>
+                                    <Button size="sm"
+                                        variant="outline"
+                                        onClick={onCopyQuoto}
+                                    ><Copy/></Button>
+                                </TooltipButton>
 
-                            {userId === user_id && 
-                            <>
-                                <TooltipButton text='Edit'><Button size="sm"><Edit/></Button></TooltipButton>
-                                <TooltipButton text='Delete'><Button size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
-                            </>}
+                                {userId === user_id && 
+                                <>
+                                    <TooltipButton text='Edit'><Button size="sm"><Edit/></Button></TooltipButton>
+                                    <TooltipButton text='Delete'><Button size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
+                                </>}
+                            </TooltipProvider>
                         </PopoverContent>
                     </Popover>
                 </div>
             </div>
         </Card>
-        </TooltipProvider>
     )
 }
 
