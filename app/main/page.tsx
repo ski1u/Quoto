@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 
 import QuotoCard from '@/components/ui/quoto-card'
-import QuotoButton from '@/components/ui/quotoButton'
+import QuotoButton from '@/components/ui/quoto-button'
 import Searchbar from '@/components/ui/searchbar'
 
 import { useApp } from '@/components/AppProvider'
@@ -12,6 +12,8 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import quotoLogo from "@/assets/quoto-logo.svg"
+
+import { shuffleArray } from '@/lib/shuffleArray'
 
 const dummy = [
   {
@@ -143,7 +145,7 @@ const Main = () => {
 
       <div className='flex justify-center'>
         <div className='w-2/3 columns-4 space-y-4'>
-          {dummy.map((data, dummyIndex) => (
+          {shuffleArray([...dummy, ...(quotos ?? [])]).map((data, dummyIndex) => (
             <QuotoCard args={data} user={user} key={dummyIndex} />
           ))}
         </div>

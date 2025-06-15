@@ -21,7 +21,7 @@ import { User } from '@supabase/supabase-js'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 
-import { likeQuoto, bookmarkQuoto } from '@/app/main/action'
+import { likeQuoto, bookmarkQuoto, deleteQuoto } from '@/app/main/action'
 
 const TooltipButton = ({ children, text } : {
     children: React.ReactNode
@@ -67,10 +67,14 @@ const QuotoCard = ({ args, user, className } : {
     // ---
 
     const onCopyQuoto = () => {navigator.clipboard.writeText(`"${quoto}"`); toast.success("Successfully copied quoto")}
+    const onDeleteQuoto = async (id: string) => {
+        await deleteQuoto(id)
+        toast.success("Successfully deleted a Quoto")
+    }
     
     return (
         <Card
-            className={cn('p-3 z-[1] w-fit h-fit break-inside-avoid', className)}
+            className={cn('p-3 z-[1] h-fit break-inside-avoid', className)}
         >
             <div className='flex items-center gap-2'>
                 <Avatar
@@ -114,7 +118,7 @@ const QuotoCard = ({ args, user, className } : {
                 <div className='mt-4 flex items-center space-x-2 relative'>
                     <div
                         className='flex items-center space-x-1 cursor-pointer'
-                        onClick={() => {}}
+                        onClick={() => likeQuoto(id)}
                     >
                         <Heart
                             size={16}
@@ -128,7 +132,7 @@ const QuotoCard = ({ args, user, className } : {
                         size={16}
                         className={cn(userBookmarked ? "fill-yellow-400" : "hover:fill-yellow-300", "cursor-pointer")}
                         strokeWidth={userBookmarked ? 0 : 2}
-                        onClick={() => {}}
+                        onClick={() => bookmarkQuoto(id)}
                     />
 
                     <Popover>
@@ -154,7 +158,7 @@ const QuotoCard = ({ args, user, className } : {
                                 {userId === user_id && 
                                 <>
                                     <TooltipButton text='Edit'><Button size="sm"><Edit/></Button></TooltipButton>
-                                    <TooltipButton text='Delete'><Button size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
+                                    <TooltipButton text='Delete'><Button onClick={() => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
                                 </>}
                             </TooltipProvider>
                         </PopoverContent>

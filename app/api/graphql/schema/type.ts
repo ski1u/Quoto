@@ -33,10 +33,12 @@ export const typeDefs = gql`
 
 export type quotoInit = {
     id: string,
+    user_id: string,
     author: string,
     quoto: string,
     tags: string[],
     likes: number,
-    isUser: boolean, 
-    created_at: string
+    featured: boolean, 
+    created_at: string,
+    private: boolean
 }
