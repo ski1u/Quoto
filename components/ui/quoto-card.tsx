@@ -62,7 +62,7 @@ const QuotoCard = ({ args, user, className } : {
 
     // ---
 
-    const tagWordCount = tags.join("").length
+    const tagWordCount = tags && tags.join("").length
 
     // ---
 
@@ -101,17 +101,17 @@ const QuotoCard = ({ args, user, className } : {
                 <p className='text-lg font-bold leading-tight tracking-tight'>{quoto}</p>
 
                 <div className='flex flex-wrap mt-2 gap-1'>
-                    {tagWordCount < 75 ? tags.map((tag, tagIndex) => (
+                    {tagWordCount < 75 && tags ? tags.map((tag, tagIndex) => (
                         <Badge
                             className="rounded-full text-[10px] cursor-pointer"
                             key={`tag-${tagIndex}`}>{tag}</Badge>
-                    )) : tags.slice(0, Math.floor(tags.length / 2)).map((tag, tagIndex) => (
+                    )) : tags ? tags.slice(0, Math.floor(tags.length / 2)).map((tag, tagIndex) => (
                         <>
                             <Badge
                             className="rounded-full text-[10px] cursor-pointer"
                             key={`tag-${tagIndex}`}>{tag}</Badge>
                         </>
-                    ))}
+                    )) : null}
                     {tagWordCount > 75 && <p className='text-sm text-gray-800'>...</p>}
                 </div>
 

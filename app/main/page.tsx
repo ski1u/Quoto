@@ -6,6 +6,8 @@ import QuotoCard from '@/components/ui/quoto-card'
 import QuotoButton from '@/components/ui/quoto-button'
 import Searchbar from '@/components/ui/searchbar'
 
+import useLoader from '@/components/useLoader'
+import useQuotos from '@/components/useQuotos'
 import { useApp } from '@/components/AppProvider'
 import { useRouter } from 'next/navigation'
 
@@ -119,18 +121,28 @@ const dummy = [
 ];
 
 const Main = () => {
-  const { user, quotos } = useApp()
+  const { user } = useApp()
+  const { loading, setLoading } = useLoader(true)
+  const { quotos, quotoLoading, LoadingScreen, ref, inView, hasMore, load } = useQuotos()
+  console.log(quotos.length, hasMore)
+
   const router = useRouter()
 
   // ---
 
-  useEffect(() => {if (!user?.user_metadata["full_name"]) router.push("/main/upboarding")}, [router])
+  useEffect(() => {if (!user?.user_metadata["full_name"]) router.push("/main/upboarding")}, [user, router])
+  useEffect(() => {load(); setLoading(false)}, [])
+  useEffect(() => {
+      if (inView && !quotoLoading && hasMore) load()
+  }, [inView])
 
   // ---
 
+  if (loading) return <LoadingScreen/>
+
   return (
     <div
-      className='h-screen w-screen p-1 space-y-6'
+      className='h-screen w-screen p-1 space-y-6 relative'
     >
       <QuotoButton/>
 
@@ -145,11 +157,15 @@ const Main = () => {
 
       <div className='flex justify-center'>
         <div className='w-2/3 columns-4 space-y-4'>
-          {shuffleArray([...dummy, ...(quotos ?? [])]).map((data, dummyIndex) => (
+          {shuffleArray([...(quotos ?? [])]).map((data, dummyIndex) => (
             <QuotoCard args={data} user={user} key={dummyIndex} />
           ))}
         </div>
       </div>
+
+      {quotoLoading && <p>loading</p>}
+
+      <div ref={ref} className='h-4' />
     </div>
   )
 }

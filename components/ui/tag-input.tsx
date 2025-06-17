@@ -45,16 +45,16 @@ const TagInput = ({
 
   return (
     <div
-      className="flex flex-wrap items-center gap-2 p-2 border border-gray-300 rounded-md focus-within:ring-2 ring-blue-500"
+      className="flex flex-wrap items-center gap-2 p-2 border border-gray-300 rounded-md focus-within:ring-1 ring-black"
       onClick={() => inputRef.current?.focus()}
     >
       {value.map((tag, index) => (
         <div
           key={index}
-          className="flex items-center gap-1 px-2 py-1 text-sm bg-blue-100 rounded-full hover:opacity-75 transition-all duration-300"
+          className="flex items-center gap-1 px-2 py-1 text-sm bg-black text-white rounded-full hover:opacity-75 transition-all duration-300"
         >
           <span className={cn("cursor-default", tagTextClassName)}>{tag}</span>
-          <button onClick={() => removeTag(index)} className="text-blue-500 hover:text-red-400 cursor-pointer">
+          <button onClick={() => removeTag(index)} className="text-gray-400 hover:text-red-400 cursor-pointer">
             <X size={14} />
           </button>
         </div>

@@ -4,18 +4,18 @@
 Workmap
 
 1. Quoto Card
-- Tag Limiting
-- Interative Hovering (clicks, hovering)
-- Ellipsis with buttons (like, bookmark, delete -> if its the user, the UI should be above the icon)
+- Tag Limiting /
+- Interative Hovering (clicks, hovering) /
+- Ellipsis with buttons (like, bookmark, delete -> if its the user, the UI should be above the icon) /
 
 2. Functionality
-- Create, Delete, Update Quotos
+- Create /, Delete /, Update Quotos
 
 2. Searchbar
 - Add a Search Icon inside of the input
 - Functionaity (Searching by tag, searching by quoto, suggestions, redirection by URL omce searched)
 
-3. Add Quoto
+3. Add Quoto /
 - Button on the bottom left corner
 - Functionality (Dialog on click, schema, form submitting)
 - UI Form

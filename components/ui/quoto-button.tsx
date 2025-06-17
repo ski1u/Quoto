@@ -98,7 +98,7 @@ const QuotoForm = ({ form }: { form: ReturnType<typeof useQuotoForm> }) => {
             </form>
 
             <Button
-                className='w-1/3'
+                className='w-1/3 mt-4'
                 onClick={submitHandler}
                 type='submit'
                 disabled={loading}
