@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Avatar, AvatarFallback } from './avatar'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
@@ -65,6 +65,10 @@ const QuotoCard = ({ args, user, className } : {
     const userLiked = liked_quotos?.includes(id)
     const userBookmarked = bookmarked_quotos?.includes(id)
 
+    const [liked, setLiked] = useState<boolean>(userLiked ?? false)
+    const [qLikes, setQLikes] = useState<number>(likes)
+    const [bookmarked, setBookmarked] = useState<boolean>(userBookmarked ?? false)
+
     // ---
 
     const tagWordCount = tags && tags.join("").length
@@ -72,6 +76,34 @@ const QuotoCard = ({ args, user, className } : {
     // ---
 
     const onCopyQuoto = () => {navigator.clipboard.writeText(`"${quoto}"`); toast.success("Successfully copied quoto")}
+    const onLikeQuoto = async (id: string) => {
+        const [pLiked, pLikes] = [liked, qLikes]
+
+        setLiked(prev => !prev); setQLikes(prev => liked ? prev - 1 : prev + 1)
+
+        // ---
+
+        try {
+            await likeQuoto(id)
+        } catch (error) {
+            setLiked(pLiked); setQLikes(pLikes)
+            toast.error("Failed to like Quoto")
+        }
+    }
+    const onBookmarkQuoto = async (id: string) => {
+        const pBookmarked = bookmarked
+
+        setBookmarked(prev => !prev)
+
+        // ---
+
+        try {
+            await bookmarkQuoto(id)
+        } catch (error) {
+            setBookmarked(pBookmarked)
+            toast.error("Failed to bookmark Quoto")
+        }
+    }
     const onDeleteQuoto = async (id: string) => {
         try {
             await deleteQuoto(id)
@@ -129,21 +161,21 @@ const QuotoCard = ({ args, user, className } : {
                 <div className='mt-4 flex items-center space-x-2 relative'>
                     <div
                         className='flex items-center space-x-1 cursor-pointer'
-                        onClick={() => likeQuoto(id)}
+                        onClick={() => onLikeQuoto(id)}
                     >
                         <Heart
                             size={16}
-                            className={userLiked ? "fill-red-400" : "hover:fill-red-300"}
-                            strokeWidth={userLiked ? 0 : 2}
+                            className={liked ? "fill-red-400" : "hover:fill-red-300"}
+                            strokeWidth={liked ? 0 : 2}
                         />
-                        <p className='font-medium text-sm'>{likes}</p>
+                        <p className='font-medium text-sm'>{qLikes}</p>
                     </div>
 
                     <Bookmark
                         size={16}
-                        className={cn(userBookmarked ? "fill-yellow-400" : "hover:fill-yellow-300", "cursor-pointer")}
-                        strokeWidth={userBookmarked ? 0 : 2}
-                        onClick={() => bookmarkQuoto(id)}
+                        className={cn(bookmarked ? "fill-yellow-400" : "hover:fill-yellow-300", "cursor-pointer")}
+                        strokeWidth={bookmarked ? 0 : 2}
+                        onClick={() => onBookmarkQuoto(id)}
                     />
 
                     <Popover>
@@ -163,6 +195,7 @@ const QuotoCard = ({ args, user, className } : {
                                     <Button size="sm"
                                         variant="outline"
                                         onClick={onCopyQuoto}
+                                        type='button'
                                     ><Copy/></Button>
                                 </TooltipButton>
 
@@ -171,13 +204,13 @@ const QuotoCard = ({ args, user, className } : {
                                     <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
                                         <TooltipButton text='Edit'>
                                             <DialogTrigger asChild>
-                                                <Button size="sm"><Edit/></Button>
+                                                <Button type='button' size="sm"><Edit/></Button>
                                             </DialogTrigger>
                                         </TooltipButton>
 
                                         <QuotoButtonContent form={editQuotoForm} mode="edit" args={args} onSuccess={() => setEditDialogOpen(false)} />
                                     </Dialog>
-                                    <TooltipButton text='Delete'><Button onClick={() => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
+                                    <TooltipButton text='Delete'><Button type='button' onClick={() => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
                                 </>}
                             </TooltipProvider>
                         </PopoverContent>
