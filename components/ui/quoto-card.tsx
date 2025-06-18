@@ -5,9 +5,11 @@ import React from 'react'
 import { Avatar, AvatarFallback } from './avatar'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
+import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription, DialogHeader } from './dialog'
 import { Card } from './card'
 import { Badge } from './badge'
 import { Button } from './button'
+import { QuotoButtonContent } from './quoto-button'
 
 import { toast } from 'sonner'
 
@@ -22,6 +24,7 @@ import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 
 import { likeQuoto, bookmarkQuoto, deleteQuoto } from '@/app/main/action'
+import { useQuotoForm } from '@/data/quoto-form-data'
 
 const TooltipButton = ({ children, text } : {
     children: React.ReactNode
@@ -44,13 +47,15 @@ const QuotoCard = ({ args, user, className } : {
         tags: string[]
         likes: number
         featured: boolean
+        private: boolean
         created_at?: string
     },
     user: User | undefined,
     className?: string
 }) => {
-    const { id, user_id, quoto, author, tags, likes, featured, created_at } = args
+    const { id, user_id, quoto, author, tags, likes, featured, private: isPrivate, created_at } = args
     const userId = user?.id
+    const [editDialogOpen, setEditDialogOpen] = React.useState(false)
 
     // ---
 
@@ -68,9 +73,15 @@ const QuotoCard = ({ args, user, className } : {
 
     const onCopyQuoto = () => {navigator.clipboard.writeText(`"${quoto}"`); toast.success("Successfully copied quoto")}
     const onDeleteQuoto = async (id: string) => {
-        await deleteQuoto(id)
-        toast.success("Successfully deleted a Quoto")
+        try {
+            await deleteQuoto(id)
+            toast.success("Successfully deleted a Quoto")
+        } catch (error) {toast.error("An error occurred")}
     }
+
+    // ---
+
+    const editQuotoForm = useQuotoForm()
     
     return (
         <Card
@@ -157,7 +168,15 @@ const QuotoCard = ({ args, user, className } : {
 
                                 {userId === user_id && 
                                 <>
-                                    <TooltipButton text='Edit'><Button size="sm"><Edit/></Button></TooltipButton>
+                                    <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                                        <TooltipButton text='Edit'>
+                                            <DialogTrigger asChild>
+                                                <Button size="sm"><Edit/></Button>
+                                            </DialogTrigger>
+                                        </TooltipButton>
+
+                                        <QuotoButtonContent form={editQuotoForm} mode="edit" args={args} onSuccess={() => setEditDialogOpen(false)} />
+                                    </Dialog>
                                     <TooltipButton text='Delete'><Button onClick={() => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
                                 </>}
                             </TooltipProvider>

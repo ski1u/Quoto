@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 export const quoto_form_schema = z.object({
     quoto: z.string()
-    .regex(/^[a-zA-Z0-9 ]*$/, {
-      message: "Quoto should only contain letters, numbers, and spaces",
+    .regex(/^[a-zA-Z0-9\s.,?!:;'"\-–—()\[\]{}&%$#@]*$/, {
+      message: "Quoto should only contain letters, numbers, and common punctuation.",
     })
     .min(6, { message: "Must be more than 6 characters" })
     .max(200, { message: "Must be less than 200 characters" }),

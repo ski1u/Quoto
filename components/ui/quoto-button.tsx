@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription, DialogHeader } from './dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
@@ -8,7 +8,6 @@ import TagInput from './tag-input'
 import { Textarea } from './textarea'
 import { Button } from './button'
 import { Checkbox } from './checkbox'
-import LoadingScreen from './loading-screen'
 
 import { z } from "zod"
 
@@ -18,23 +17,56 @@ import { Plus } from 'lucide-react'
 
 import { toast } from 'sonner'
 
-import { createQuoto } from '@/app/main/action'
+import { createQuoto, updateQuoto } from '@/app/main/action'
 
-const QuotoForm = ({ form }: { form: ReturnType<typeof useQuotoForm> }) => {
+const QuotoForm = ({ form, args, mode, onSuccess }: {
+    form: ReturnType<typeof useQuotoForm>
+    args?: {
+        id: string
+        user_id: string
+        quoto: string
+        author: string
+        tags: string[]
+        likes: number
+        featured: boolean
+        private: boolean
+        created_at?: string
+    }
+    mode?: "create" | "edit"
+    onSuccess?: () => void
+}) => {
     const [loading, setLoading] = useState<boolean>(false)
+    const isEditing = mode === "edit"
+
+    // Populate form fields when args is provided
+    useEffect(() => {
+        if (args) {
+            form.reset({
+                quoto: args.quoto,
+                tags: args.tags || [],
+                private: args.private
+            })
+        }
+    }, [args, form])
 
     const submitHandler = form.handleSubmit(async (data: z.infer<typeof qSchema>) => {
         setLoading(true)
 
-        // ---
+        try {
+            if (isEditing && args) await updateQuoto(args.id, data)
+            else await createQuoto(data)
+            
+            form.reset()
 
-        await createQuoto(data)
-
-        // ---
-
-        toast.success("Successfully posted a Quoto")
-        form.reset()
-        setLoading(false)
+            const msg = isEditing && args ? "Successfully updated Quoto" : "Successfully posted a Quoto"
+            toast.success(msg)
+            
+            if (onSuccess) onSuccess()
+        } catch (error) {
+            toast.error("An error occurred")
+        } finally {
+            setLoading(false)
+        }
     })
 
     return (
@@ -95,23 +127,33 @@ const QuotoForm = ({ form }: { form: ReturnType<typeof useQuotoForm> }) => {
                         </FormItem>
                     )}
                 />
-            </form>
 
-            <Button
-                className='w-1/3 mt-4'
-                onClick={submitHandler}
-                type='submit'
-                disabled={loading}
-            >Post</Button>
+                <Button
+                    className='w-1/3 mt-4'
+                    type='submit'
+                    disabled={loading}
+                >{isEditing ? "Update" : "Post"}</Button>
+            </form>
         </Form>
     )
 }
 
-const QuotoButtonContent = ({ mode, args, className, form } : {
+export const QuotoButtonContent = ({ mode, args, className, form, onSuccess } : {
     mode?: "create" | "edit",
-    args?: {},
+    args?: {
+        id: string
+        user_id: string
+        quoto: string
+        author: string
+        tags: string[]
+        likes: number
+        featured: boolean
+        private: boolean
+        created_at?: string
+    },
     className?: string,
     form: ReturnType<typeof useQuotoForm>
+    onSuccess?: () => void
 }) => {
     const isCreating = (mode === "create" || !mode)
 
@@ -119,14 +161,14 @@ const QuotoButtonContent = ({ mode, args, className, form } : {
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>
-                    {isCreating ? "Create a Quoto" : "Edit Quoto"}
+                    {isCreating ? "Create a Quoto" : "Edit a Quoto"}
                 </DialogTitle>
                 <DialogDescription>
-                    {isCreating ? "Got an inspirational quote, mantra, or verse to share?" : ""}
+                    {isCreating ? "Got an inspirational quote, mantra, or verse to share?" : "Mistakes made? No problem."}
                 </DialogDescription>
             </DialogHeader>
 
-            <QuotoForm form={form} />
+            <QuotoForm form={form} mode={mode} args={args} onSuccess={onSuccess} />
         </DialogContent>
     )
 }
@@ -158,13 +200,15 @@ const QuotoButton = () => {
     return (
         <>        
             <Dialog open={open} onOpenChange={handleDialogChange}>
-                <DialogTrigger
-                    className='absolute bottom-12 right-12 rounded-full bg-slate-100 shadow-lg drop-shadow-md p-2 transition-all duration-300 hover:opacity-75 hover:-translate-y-1'
-                >
-                    <Plus/>
-                </DialogTrigger>
+                <div className='fixed z-50 bottom-8 right-12'>
+                    <DialogTrigger
+                        className='rounded-full bg-slate-100 shadow-lg drop-shadow-md p-2 transition-all duration-300 hover:opacity-75 hover:-translate-y-1'
+                    >
+                        <Plus/>
+                    </DialogTrigger>
+                </div>
 
-                <QuotoButtonContent form={form} />
+                <QuotoButtonContent form={form} onSuccess={() => setOpen(false)} />
             </Dialog>
 
             <Dialog open={confirmClose} onOpenChange={setConfirmClose}>

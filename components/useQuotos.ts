@@ -6,7 +6,7 @@ import { fetchQuotos } from '@/lib/fetchQuotos'
 
 import LoadingScreen from './ui/loading-screen'
 
-const useQuotos = () => {
+const useQuotos = (pageLimit?: number) => {
     const [quotos, setQuotos] = useState<Array<quotoInit>>([])
     const [page, setPage] = useState<number>(0)
     const [hasMore, setHasMore] = useState<boolean>(true)
@@ -21,24 +21,22 @@ const useQuotos = () => {
     const load = async () => {
         if (!hasMore) return
         setQuotoLoading(true)
-
-        const page_limit = 20
+      
+        const page_limit = pageLimit || 20
         const newQuotos = await fetchQuotos({ limit: page_limit, offset: page * page_limit })
-
-        // ---
-
+      
         if (newQuotos.length === 0) setHasMore(false)
         else {
-            setQuotos(prev => {
-                const ids = new Set(prev.map(q => q.id))
-                const filtered = newQuotos.filter(q => !ids.has(q.id))
-                return [...prev, ...filtered]
-            })
-            setPage(prev => prev + 1)
+          setQuotos(prev => {
+            const ids = new Set(prev.map(q => q.id))
+            const filtered = newQuotos.filter(q => !ids.has(q.id))
+            return [...prev, ...filtered]
+          })
+          setPage(prev => prev + 1)
         }
-
+      
         setQuotoLoading(false)
-    }
+      }
     
     // ---
 

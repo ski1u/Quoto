@@ -84,6 +84,23 @@ export const createQuoto = async (
     }); if (error) return encodedRedirect("error", "/main", error?.message || "Quoto Insert Error");
 }
 
+export const updateQuoto = async (
+    id: string,
+    args: { quoto: string, tags?: string[], private: boolean }
+) => {
+    const supabase = await createClient()
+
+    const { error: userError, data: { user } } = await supabase.auth.getUser()
+    if (userError) return encodedRedirect("error", "/main", userError?.message || "User Error");
+
+    const { error } = await supabase.from("quotos").update({
+        ...args,
+        // updated_at: new Date().toISOString()
+    }) .match({ id, user_id: user?.id })
+    
+    if (error) return encodedRedirect("error", "/main", error?.message || "Quoto Update Error");
+}
+
 export const deleteQuoto = async (id: string) => {
     const supabase = await createClient()
 
