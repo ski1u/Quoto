@@ -10,20 +10,6 @@ import LoadingScreen from './ui/loading-screen'
 
 import { createClient } from '@/utils/supabase/client'
 
-// Type guard for quotoInit
-function isQuotoInit(obj: any): obj is quotoInit {
-  return obj &&
-    typeof obj.id === 'string' &&
-    typeof obj.user_id === 'string' &&
-    typeof obj.author === 'string' &&
-    typeof obj.quoto === 'string' &&
-    Array.isArray(obj.tags) &&
-    typeof obj.likes === 'number' &&
-    typeof obj.featured === 'boolean' &&
-    typeof obj.created_at === 'string' &&
-    typeof obj.private === 'boolean';
-}
-
 const useQuotos = (pageLimit?: number) => {
     const [quotos, setQuotos] = useState<Array<quotoInit>>([])
     const [page, setPage] = useState<number>(0)
@@ -33,7 +19,9 @@ const useQuotos = (pageLimit?: number) => {
 
     // ---
 
-    const { ref, inView } = useInView({})
+    const { ref, inView } = useInView({
+      threshold: 0.2
+    })
 
     // ---
 
@@ -85,27 +73,16 @@ useEffect(() => {
       },
       (payload) => {
 
-        setQuotos(prev => {
+        setQuotos((prev: any) => {
           switch (payload.eventType) {
             case 'INSERT':
-              return isQuotoInit(payload.new) ? [payload.new, ...prev] : prev;
+              return [payload.new as quotoInit, ...prev]
             case 'UPDATE':
-              return prev.map(q => {
-                if (isQuotoInit(payload.new) && q.id === payload.new.id) {
-                  return {
-                    ...q,
-                    likes: payload.new.likes,
-                    featured: payload.new.featured,
-                  }
-                }
-                return q
-              })
+              return prev.map((q: any) => q.id === payload.new.id ? payload.new : q)
             case 'DELETE':
-              return isQuotoInit(payload.old)
-                ? prev.filter(q => q.id !== payload.old.id)
-                : prev;
+              return prev.filter((q : any) => q.id !== payload.old.id)
             default:
-              return prev;
+              return prev
           }
         })
       }

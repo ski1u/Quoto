@@ -33,17 +33,17 @@ const AuthPageSide = ({ className, children } : {
     const { quoto, by } = qExamples[quotoIndex]
     
     return (
-    <div className='w-screen h-screen flex'>
-        <div className='w-1/3 flex justify-center items-center shadow-2xl'>
+    <div className='w-screen h-screen flex flex-col sm:flex-row'>
+        <div className='w-full h-full md:w-1/3 flex justify-center items-center shadow-2xl px-4 sm:px-0 md:px-4 lg:px-10 xl:px-16'>
             <Image 
                 className='absolute top-6 left-6 cursor-pointer'
                 alt='quoto-logo' src={quotoLogo} width={108} height={108}
                 onClick={() => router.push("/")}
             />
-            <div className={cn("w-[60%]", className)}>{children}</div>
+            <div className={cn("w-full", className)}>{children}</div>
         </div>
 
-        <div className='w-2/3 flex justify-center items-center'>
+        <div className='hidden w-2/3 md:flex justify-center items-center'>
             <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                     transition={{ duration: 0.75, type: "spring" }}
@@ -51,7 +51,7 @@ const AuthPageSide = ({ className, children } : {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -25 }}
                     key={String(quotoIndex)}
-                    className='flex items-start gap-2 w-[40%]'
+                    className='flex items-start gap-2 xl:w-[40%] lg:w-[60%] md:w-[40%] sm:w-[20%]'
                 >
                     <Image 
                         className=''

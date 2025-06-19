@@ -16,6 +16,9 @@ import Image from 'next/image'
 
 import quotoLogo from "@/assets/quoto-logo.svg"
 
+import { signOutAction } from '../actions'
+import { Button } from '@/components/ui/button'
+
 const Main = () => {
   const { user } = useApp()
   const { loading, setLoading } = useLoader(true)
@@ -49,6 +52,8 @@ const Main = () => {
     >
       <QuotoButton/>
 
+      <Button className='absolute' onClick={signOutAction}></Button>
+
       <Image
         alt="quoto-logo"
         src={quotoLogo}
@@ -81,7 +86,7 @@ const Main = () => {
       </div>
       )}
 
-      <div ref={ref} className='h-4' />
+      <div ref={ref} className='h-24' />
     </div>
   )
 }
