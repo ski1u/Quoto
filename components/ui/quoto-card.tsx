@@ -26,14 +26,15 @@ import { format } from 'date-fns'
 import { likeQuoto, bookmarkQuoto, deleteQuoto } from '@/app/main/action'
 import { useQuotoForm } from '@/data/quoto-form-data'
 
-const TooltipButton = ({ children, text } : {
+export const TooltipButton = ({ children, text, side = "right" } : {
     children: React.ReactNode
     text: string
+    side?: "right" | "left"
 }) => {
     return (
         <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>{children}</TooltipTrigger>
-            <TooltipContent side='right'>{text}</TooltipContent>
+            <TooltipContent side={side}>{text}</TooltipContent>
         </Tooltip>
     )
 }

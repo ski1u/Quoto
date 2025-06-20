@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from 'react'
 import QuotoCard from '@/components/ui/quoto-card'
 import QuotoButton from '@/components/ui/quoto-button'
 import Searchbar from '@/components/ui/searchbar'
+import UserProfileButton from '@/components/ui/user-profile-button'
 import { SpinningLoader } from '@/components/ui/loading-screen'
 
 import useLoader from '@/components/useLoader'
@@ -15,9 +16,6 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import quotoLogo from "@/assets/quoto-logo.svg"
-
-import { signOutAction } from '../actions'
-import { Button } from '@/components/ui/button'
 
 const Main = () => {
   const { user } = useApp()
@@ -51,6 +49,10 @@ const Main = () => {
       className='h-screen w-screen xl:space-y-6 relative overflow-x-hidden'
     >
       <QuotoButton/>
+      <UserProfileButton
+        author={user?.user_metadata.full_name as string}
+        user_id={user?.id as string}
+      />
 
       <Image
         alt="quoto-logo"
