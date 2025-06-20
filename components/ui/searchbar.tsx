@@ -8,9 +8,9 @@ import { Search } from 'lucide-react'
 
 const Searchbar = () => {
   return (
-    <div className='w-full flex justify-center items-center'>
+    <div className='w-full p-4 flex justify-center items-center'>
         <Input
-            className='w-2/3 shadow-md'
+            className='w-full lg:w-[75%] shadow-md'
             placeholder='Search tags...'
           />
     </div>

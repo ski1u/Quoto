@@ -48,23 +48,21 @@ const Main = () => {
 
   return (
     <div
-      className='h-screen w-screen p-1 space-y-6 relative overflow-x-hidden'
+      className='h-screen w-screen xl:space-y-6 relative overflow-x-hidden'
     >
       <QuotoButton/>
-
-      <Button className='absolute' onClick={signOutAction}></Button>
 
       <Image
         alt="quoto-logo"
         src={quotoLogo}
-        className='absolute top-2 left-16 cursor-pointer'
+        className='absolute top-4 left-16 cursor-pointer hidden'
         width={108}
         onClick={() => router.push("/")}
       />
-      <Searchbar/>
 
+      <Searchbar/>
       <div className='flex justify-center'>
-        <div className='w-2/3 columns-4 space-y-4'>
+        <div className='w-full lg:w-[75%] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 space-y-4 p-4'>
           {quotos.map((data, dummyIndex) => (
             <QuotoCard args={data} user={user} key={dummyIndex} />
           ))}
