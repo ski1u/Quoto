@@ -32,7 +32,7 @@ const UserProfileButton = ({ author, user_id } : {
         >
             <TooltipProvider>
                 <TooltipButton
-                    text='Settings'
+                    text='Profile'
                     side='left'
                 >
                     <Link href={`/main/profile/${user_id}`}>
