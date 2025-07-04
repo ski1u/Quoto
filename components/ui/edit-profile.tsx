@@ -2,14 +2,19 @@
 
 import React, { useEffect } from 'react'
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel } from './form'
+import useLoader from '../useLoader'
+
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
 import { Input } from './input'
 import { Textarea } from './textarea'
 import { Button } from './button'
+import { toast } from 'sonner'
 
 import { profile_form_schema, useProfileForm } from '@/data/profile-form-data'
 import { z } from 'zod'
+
+import { updateUserMetadata } from '@/app/main/settings/action'
 
 import { Edit } from 'lucide-react'
 
@@ -20,12 +25,23 @@ const EditProfile = ({ args } : {
     }
 }) => {
     const { full_name, description } = args
+    const { loading, setLoading } = useLoader()
     const form = useProfileForm()
 
     // ---
 
+    const values = form.watch()
+    const isUnchanged = values.full_name === full_name && (values.description ?? "") === (description ?? "")
+
+    // ---
+
     const submitHandler = form.handleSubmit(async (data: z.infer<typeof profile_form_schema>) => {
-        console.log(data)
+        setLoading(true)
+
+        await updateUserMetadata(data)
+        toast.success("Successfully updated profile")
+
+        setLoading(false)
     })
 
     // ---
@@ -61,16 +77,23 @@ const EditProfile = ({ args } : {
                                                 className='max-h-32'
                                                 {...field} />}
                                     </FormControl>
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                             key={`profile-formfield-${fieldIndex}`}
                         />
                     ))}
 
-                    <Button
-                        type='submit'
-                        className='w-1/3'
-                    >Edit</Button>
+                    <DialogClose
+                        disabled={loading || isUnchanged}
+                        asChild
+                    >
+                        <Button
+                            type='submit'
+                            disabled={loading || isUnchanged}
+                            className='w-1/3'
+                        >Edit</Button>
+                    </DialogClose>
                 </form>
             </Form>
         </DialogContent>
