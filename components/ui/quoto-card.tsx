@@ -23,6 +23,8 @@ import { User } from '@supabase/supabase-js'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 
+import { useRouter } from 'next/navigation'
+
 import { likeQuoto, bookmarkQuoto, deleteQuoto } from '@/app/main/action'
 import { useQuotoForm } from '@/data/quoto-form-data'
 
@@ -39,7 +41,7 @@ export const TooltipButton = ({ children, text, side = "right" } : {
     )
 }
 
-const QuotoCard = ({ args, user, className } : {
+const QuotoCard = ({ args, user, clickable, className } : {
     args: {
         id: string
         user_id: string
@@ -53,10 +55,12 @@ const QuotoCard = ({ args, user, className } : {
     },
     user: User | undefined,
     className?: string
+    clickable?: boolean
 }) => {
     const { id, user_id, quoto, author, tags, likes, featured, private: isPrivate, created_at } = args
     const userId = user?.id
     const [editDialogOpen, setEditDialogOpen] = React.useState(false)
+    const router = useRouter()
 
     // ---
 
@@ -118,9 +122,13 @@ const QuotoCard = ({ args, user, className } : {
     
     return (
         <Card
-            className={cn('p-3 z-[1] h-fit break-inside-avoid', className)}
+            className={cn('p-3 z-[1] h-fit break-inside-avoid', `${(clickable) && "cursor-pointer"}`, className)}
+            onClick={() => {if (clickable) router.push(`/main/quoto/${id}`)}}
         >
-            <div className='flex items-center gap-2'>
+            <div 
+                className='flex items-center gap-2'
+                onClick={(e) => e.stopPropagation()}
+            >
                 <Avatar
                 className='w-8 h-8 text-sm font-medium'
                 ><AvatarFallback>{author.split(' ').map(word => word[0]).join('').toUpperCase()}</AvatarFallback></Avatar>
@@ -159,7 +167,10 @@ const QuotoCard = ({ args, user, className } : {
                     {tagWordCount > 75 && <p className='text-sm text-gray-800'>...</p>}
                 </div>
 
-                <div className='mt-4 flex items-center space-x-2 relative'>
+                <div
+                    className='mt-4 flex items-center space-x-2 relative'
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <div
                         className='flex items-center space-x-1 cursor-pointer'
                         onClick={() => onLikeQuoto(id)}
@@ -195,7 +206,7 @@ const QuotoCard = ({ args, user, className } : {
                                 <TooltipButton text='Copy Quoto'>
                                     <Button size="sm"
                                         variant="outline"
-                                        onClick={onCopyQuoto}
+                                        onClick={() => onCopyQuoto()}
                                         type='button'
                                     ><Copy/></Button>
                                 </TooltipButton>
@@ -211,7 +222,7 @@ const QuotoCard = ({ args, user, className } : {
 
                                         <QuotoButtonContent form={editQuotoForm} mode="edit" args={args} onSuccess={() => setEditDialogOpen(false)} />
                                     </Dialog>
-                                    <TooltipButton text='Delete'><Button type='button' onClick={() => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
+                                    <TooltipButton text='Delete'><Button type='button' onClick={(e) => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
                                 </>}
                             </TooltipProvider>
                         </PopoverContent>

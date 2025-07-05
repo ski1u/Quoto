@@ -66,7 +66,7 @@ const Main = () => {
       <div className='flex justify-center'>
         <div className='w-full lg:w-[75%] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 space-y-4 p-4'>
           {quotos.map((data, dummyIndex) => (
-            <QuotoCard args={data} user={user} key={dummyIndex} />
+            <QuotoCard clickable args={data} user={user} key={dummyIndex} />
           ))}
         </div>
       </div>

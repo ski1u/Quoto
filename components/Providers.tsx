@@ -9,9 +9,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="default"
+      defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
     >
       <AppProvider>
         <ApolloProvider client={client}>

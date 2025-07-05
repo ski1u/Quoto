@@ -1,8 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { Providers } from "@/components/Providers";
+import { siteConfig } from "@/config/site";
 
+import { Providers } from "@/components/Providers";
 import { Toaster } from "sonner";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -11,8 +12,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Quoto",
-  description: "",
+  title: siteConfig.title,
+  description: siteConfig.description,
 };
 
 const inter = Inter({
@@ -26,8 +27,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="text-foreground">
+    <html lang="en" suppressHydrationWarning>
+      <head/>
+      <body
+        className={`min-h-screen bg-background antialiased ${inter.className}`}
+      >
         <Providers>
           {children}
           <Toaster richColors position="bottom-right" />
