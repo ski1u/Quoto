@@ -15,7 +15,7 @@ const Quoto = async ({ params } : {
     
     // ---
 
-    const { data, isOwner } = res
+    const { data, user_metadata, isOwner } = res
 
     return (
         <div
@@ -23,6 +23,7 @@ const Quoto = async ({ params } : {
         >
             <MainQuoto
                 data={data}
+                user_metadata={user_metadata}
                 isOwner={isOwner}
             />
         </div>

@@ -51,10 +51,10 @@ const TagInput = ({
       {value.map((tag, index) => (
         <div
           key={index}
-          className="flex items-center gap-1 px-2 py-1 text-sm bg-black text-white rounded-full hover:opacity-75 transition-all duration-300"
+          className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-black text-white rounded-full hover:opacity-75 transition-all duration-300"
         >
           <span className={cn("cursor-default", tagTextClassName)}>{tag}</span>
-          <button onClick={() => removeTag(index)} className="text-gray-400 hover:text-red-400 cursor-pointer">
+          <button onClick={() => removeTag(index)} className="text-gray-300 hover:text-red-400 cursor-pointer">
             <X size={14} />
           </button>
         </div>

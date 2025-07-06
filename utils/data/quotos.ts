@@ -23,6 +23,7 @@ export async function getQuotoFromId(id: string) {
 
     return {
         data: data as Quoto,
+        user_metadata: user?.user_metadata,
         isOwner: data.user_id === user.id
     }
 }
