@@ -109,8 +109,8 @@ const MainQuoto = ({ data, user_metadata, isOwner } : {
 
                     {/* --- */}
 
-                    <div className="w-1/2">
-                        <div className='flex items-center gap-2'>
+                    <div className="w-1/2 flex flex-col justify-between">
+                        <Link href={`/main/profile/${user_id}`} className='flex items-center gap-2 cursor-pointer'>
                             <Avatar
                                 className='w-8 h-8 text-sm font-medium'
                             ><AvatarFallback>{author.split(' ').map(word => word[0]).join('').toUpperCase()}</AvatarFallback></Avatar>
@@ -123,7 +123,7 @@ const MainQuoto = ({ data, user_metadata, isOwner } : {
                                     ) : created_at ? format(created_at, "MMM do, yyyy") : ""}
                                 </p>
                             </div>
-                        </div>
+                        </Link>
 
                         <div>
                             <div className='flex flex-wrap mt-2 gap-1'>
@@ -143,17 +143,16 @@ const MainQuoto = ({ data, user_metadata, isOwner } : {
 
                             <div className='flex justify-between mt-4'>
                                 <div className='flex space-x-2'>
-                                    <div className='flex items-center space-x-1'>
+                                    <div className='flex items-center space-x-1 cursor-pointer' onClick={() => onLikeQuoto(id)}>
                                         <Heart
                                         size={16}
                                         className={liked ? "fill-red-400" : "hover:fill-red-300"}
                                         strokeWidth={liked ? 0 : 2}
-                                        onClick={() => onLikeQuoto(id)}
                                         /><span className='font-medium text-sm'>{likes}</span></div>
                                     <div
                                     className='flex items-center space-x-1'
                                     onClick={() => onBookmarkQuoto(id)}
-                                    ><Bookmark size={16} className={bookmarked ? "fill-yellow-400" : "hover:fill-yellow-300"} strokeWidth={bookmarked ? 0 : 2}/></div>
+                                    ><Bookmark size={16} className={(bookmarked ? "fill-yellow-400" : "hover:fill-yellow-300") + " cursor-pointer"} strokeWidth={bookmarked ? 0 : 2}/></div>
                                 </div>
                                 <div>
                                     <Popover>

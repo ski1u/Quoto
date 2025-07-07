@@ -23,6 +23,11 @@ const Profile = async ({ params } : {
     <div
       className='w-screen h-screen flex justify-center items-center'
     >
+      <Link
+        href="/main"
+        className='text-gray-300 mr-4 w-fit transition-all duration-300 hover:-translate-x-1'
+      ><ArrowLeft className='mt-2' size={24} /></Link>
+      
       <Tabs className='max-h-[100%] relative' defaultValue='profile' orientation="vertical"> {/* max-h-[25%] */}
         <TabsList className='w-full'>
           <TabsTrigger className='w-full' value='profile'>Profile</TabsTrigger>
@@ -33,11 +38,6 @@ const Profile = async ({ params } : {
 
         <TabsContent value='profile'><ProfileTab fetchedProfile={fetchedData}/></TabsContent>
         <TabsContent value='posted-quotos'><PostedQTab fetchedProfile={fetchedData}/></TabsContent>
-
-        <Link
-          href="/main"
-          className='absolute text-gray-300 mt-2 w-fit transition-all duration-300 hover:-translate-y-1'
-        ><ArrowLeft className='mt-2' size={20} /></Link>
       </Tabs>
     </div>
   ) : <LoadingScreen/>

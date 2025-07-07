@@ -10,7 +10,10 @@ import LoadingScreen from './ui/loading-screen'
 
 import { createClient } from '@/utils/supabase/client'
 
-const useQuotos = (pageLimit?: number) => {
+const useQuotos = ({ pageLimit, searchTerm } : {
+  pageLimit?: number
+  searchTerm?: string
+}) => {
     const [quotos, setQuotos] = useState<Array<quotoInit>>([])
     const [page, setPage] = useState<number>(0)
     const [hasMore, setHasMore] = useState<boolean>(true)
@@ -30,7 +33,7 @@ const useQuotos = (pageLimit?: number) => {
       setQuotoLoading(true)
     
       const page_limit = pageLimit || 20
-      const newQuotos = await fetchQuotos({ limit: page_limit, offset: page * page_limit })
+      const newQuotos = await fetchQuotos({ limit: page_limit, offset: page * page_limit, searchTerm })
     
       if (newQuotos.length === 0) {
         setHasMore(false)
@@ -51,48 +54,48 @@ const useQuotos = (pageLimit?: number) => {
       setQuotoLoading(false)
     }
     
-    
-    // ---
-
-/*     useEffect(() => {load()}, [])
+    // Reset quotos, page, hasMore, and hasShuffled when searchTerm changes
     useEffect(() => {
-        if (inView && !quotoLoading && hasMore) load()
-    }, [inView]) */
+      setQuotos([])
+      setPage(0)
+      setHasMore(true)
+      setHasShuffled(false)
+    }, [searchTerm])
 
-useEffect(() => {
-  const supabase = createClient()
+    useEffect(() => {
+      const supabase = createClient()
 
-  const channel = supabase
-    .channel('quotos-changes')
-    .on(
-      'postgres_changes',
-      {
-        event: '*', // 'INSERT', 'UPDATE', 'DELETE'
-        schema: 'public',
-        table: 'quotos',
-      },
-      (payload) => {
+      const channel = supabase
+        .channel('quotos-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*', // 'INSERT', 'UPDATE', 'DELETE'
+            schema: 'public',
+            table: 'quotos',
+          },
+          (payload) => {
 
-        setQuotos((prev: any) => {
-          switch (payload.eventType) {
-            case 'INSERT':
-              return [payload.new as quotoInit, ...prev]
-            case 'UPDATE':
-              return prev.map((q: any) => q.id === payload.new.id ? payload.new : q)
-            case 'DELETE':
-              return prev.filter((q : any) => q.id !== payload.old.id)
-            default:
-              return prev
+            setQuotos((prev: any) => {
+              switch (payload.eventType) {
+                case 'INSERT':
+                  return [payload.new as quotoInit, ...prev]
+                case 'UPDATE':
+                  return prev.map((q: any) => q.id === payload.new.id ? payload.new : q)
+                case 'DELETE':
+                  return prev.filter((q : any) => q.id !== payload.old.id)
+                default:
+                  return prev
+              }
+            })
           }
-        })
-      }
-    )
-    .subscribe()
+        )
+        .subscribe()
 
-  return () => {
-    supabase.removeChannel(channel)
-  }
-}, [])
+      return () => {
+        supabase.removeChannel(channel)
+      }
+    }, [])
 
 
     return {

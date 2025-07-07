@@ -20,7 +20,7 @@ import quotoLogo from "@/assets/quoto-logo.svg"
 const Main = () => {
   const { user } = useApp()
   const { loading, setLoading } = useLoader(true)
-  const { quotos, quotoLoading, LoadingScreen, ref, inView, hasMore, load } = useQuotos(25)
+  const { quotos, quotoLoading, LoadingScreen, ref, inView, hasMore, load } = useQuotos({ pageLimit: 25 })
 
   const router = useRouter()
 

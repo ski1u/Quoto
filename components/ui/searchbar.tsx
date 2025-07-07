@@ -10,7 +10,7 @@ const Searchbar = () => {
   return (
     <div className='w-full p-4 flex justify-center items-center'>
         <Input
-            className='w-full lg:w-[75%] shadow-md'
+            className='w-full lg:w-[75%] shadow-md rounded-2xl'
             placeholder='Search tags...'
           />
     </div>

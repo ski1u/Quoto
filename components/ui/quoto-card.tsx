@@ -122,7 +122,7 @@ const QuotoCard = ({ args, user, clickable, className } : {
     
     return (
         <Card
-            className={cn('p-3 z-[1] h-fit break-inside-avoid', `${(clickable) && "cursor-pointer"}`, className)}
+            className={cn('p-3 z-[1] h-fit break-inside-avoid hover:opacity-80', `${(clickable) && "cursor-pointer"}`, className)}
             onClick={() => {if (clickable) router.push(`/main/quoto/${id}`)}}
         >
             <div 
