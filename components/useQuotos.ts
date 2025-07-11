@@ -10,9 +10,10 @@ import LoadingScreen from './ui/loading-screen'
 
 import { createClient } from '@/utils/supabase/client'
 
-const useQuotos = ({ pageLimit, searchTerm } : {
+const useQuotos = ({ pageLimit, searchTerm, shuffle = true } : {
   pageLimit?: number
   searchTerm?: string
+  shuffle?: boolean
 }) => {
     const [quotos, setQuotos] = useState<Array<quotoInit>>([])
     const [page, setPage] = useState<number>(0)
@@ -32,8 +33,9 @@ const useQuotos = ({ pageLimit, searchTerm } : {
       if (!hasMore) return
       setQuotoLoading(true)
     
+      const decodedSearchTerm = searchTerm ? decodeURIComponent(searchTerm) : undefined;
       const page_limit = pageLimit || 20
-      const newQuotos = await fetchQuotos({ limit: page_limit, offset: page * page_limit, searchTerm })
+      const newQuotos = await fetchQuotos({ limit: page_limit, offset: page * page_limit, searchTerm: decodedSearchTerm })
     
       if (newQuotos.length === 0) {
         setHasMore(false)
@@ -45,7 +47,7 @@ const useQuotos = ({ pageLimit, searchTerm } : {
         const ids = new Set(prev.map(q => q.id))
         const filtered = newQuotos.filter(q => !ids.has(q.id))
 
-        const final = !hasShuffled ? shuffleArray([...filtered]) : filtered
+        const final = !hasShuffled && shuffle ? shuffleArray([...filtered]) : filtered
         if (!hasShuffled) setHasShuffled(true)
 
         return [...prev, ...final]
