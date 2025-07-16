@@ -3,24 +3,13 @@
 
 Workmap
 
-1. Quoto Card
-- Tag Limiting /
-- Interative Hovering (clicks, hovering) /
-- Ellipsis with buttons (like, bookmark, delete -> if its the user, the UI should be above the icon) /
+Filter Button
+- on select value change, filter the quotos based on its value
 
-2. Functionality
-- Create /, Delete /, Update Quotos
-
-2. Searchbar
-- Add a Search Icon inside of the input
-- Functionaity (Searching by tag, searching by quoto, suggestions, redirection by URL omce searched)
-
-3. Add Quoto /
-- Button on the bottom left corner
-- Functionality (Dialog on click, schema, form submitting)
-- UI Form
-
-4. User Profile
-- Icon should be on the top right
-- Functionality (popover on click)
-- buttons -> account settings, log out (redirection on click)
+Revamping
+- code optimiziation and best practices
+- optimistic ui
+- file organization
+- responsive layout
+- delete unnecessary files (graphql)
+- route url best practices  
