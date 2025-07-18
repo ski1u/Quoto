@@ -122,7 +122,7 @@ const QuotoCard = ({ args, user, clickable, className } : {
     
     return (
         <Card
-            className={cn('p-3 z-[1] h-fit break-inside-avoid hover:opacity-80', `${(clickable) && "cursor-pointer"}`, className)}
+            className={cn('p-3 z-[1] h-fit break-inside-avoid hover:opacity-80 transition-all duration-300', `${(clickable) && "cursor-pointer"}`, className)}
             onClick={() => {if (clickable) router.push(`/main/quoto/${id}`)}}
         >
             <div 
@@ -148,9 +148,9 @@ const QuotoCard = ({ args, user, clickable, className } : {
                     src={quotations}
                     alt="quotations"
                     width={64}
-                    className='absolute z-[-1] opacity-50'
+                    className='absolute z-[0] opacity-50 hidden'
                 />
-                <p className='text-lg font-bold leading-tight tracking-tight'>{quoto}</p>
+                <p className='text-lg font-bold leading-tight tracking-tight z-[50]'>{quoto}</p>
 
                 <div className='flex flex-wrap mt-2 gap-1'>
                     {tagWordCount < 75 && tags ? tags.map((tag, tagIndex) => (

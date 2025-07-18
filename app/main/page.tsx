@@ -48,18 +48,25 @@ const Main = () => {
 
   return (
     <div
-      className='h-screen w-screen xl:space-y-6 relative overflow-x-hidden'
+      className='h-screen w-screen relative overflow-x-hidden
+      xl:px-64 space-y-6
+      lg:px-40
+      md:px-32
+      sm:px-24
+      px-10
+      '
     >
-      <QuotoButton/>
+      <QuotoButton className='hidden sm:block' />
       <UserProfileButton
         author={user?.user_metadata.full_name as string}
         user_id={user?.id as string}
+        className='hidden sm:block'
       />
 
       <Image
         alt="quoto-logo"
         src={quotoLogo}
-        className='absolute top-4 left-16 cursor-pointer hidden'
+        className='absolute left-16 cursor-pointer hidden xl:block'
         width={108}
         onClick={() => router.push("/")}
       />
@@ -67,7 +74,7 @@ const Main = () => {
       <Searchbar/>
       {/* <FilterSelect state={filter} setState={setFilter} /> */}
       <div className='flex justify-center'>
-        <div className='w-full lg:w-[75%] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 space-y-4 p-4'>
+        <div className='w-full columns-2 lg:columns-4 xl:columns-5 space-y-4'>
           {quotos.map((data, dummyIndex) => (
             <QuotoCard clickable args={data} user={user} key={dummyIndex} />
           ))}

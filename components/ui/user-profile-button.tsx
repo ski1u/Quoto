@@ -13,14 +13,16 @@ import { LogOut, User } from 'lucide-react'
 import { signOutAction } from '@/app/actions'
 
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
-const UserProfileButton = ({ author, user_id } : {
+const UserProfileButton = ({ author, user_id, className } : {
     author: string
     user_id: string
+    className?: string
 }) => {
   return (
     <Popover>
-        <PopoverTrigger className='absolute right-12 top-4'>
+        <PopoverTrigger className={cn('absolute right-12', className)}>
             <Avatar
                 className='w-8 h-8 text-sm font-medium shadow-lg drop-shadow-md'
             ><AvatarFallback>{author.split(' ').map(word => word[0]).join('').toUpperCase()}</AvatarFallback></Avatar>

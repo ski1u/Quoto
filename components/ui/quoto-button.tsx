@@ -10,6 +10,7 @@ import { Button } from './button'
 import { Checkbox } from './checkbox'
 
 import { z } from "zod"
+import { cn } from '@/lib/utils'
 
 import { quoto_form_schema as qSchema, useQuotoForm } from '@/data/quoto-form-data'
 
@@ -173,7 +174,9 @@ export const QuotoButtonContent = ({ mode, args, className, form, onSuccess } : 
     )
 }
 
-const QuotoButton = () => {
+const QuotoButton = ({ className } : {
+    className?: string
+}) => {
     const [open, setOpen] = useState<boolean>(false)
     const [confirmClose, setConfirmClose] = React.useState(false)
     const form = useQuotoForm()
@@ -202,7 +205,7 @@ const QuotoButton = () => {
             <Dialog open={open} onOpenChange={handleDialogChange}>
                 <div className='fixed z-50 bottom-8 right-12'>
                     <DialogTrigger
-                        className='rounded-full bg-slate-100 shadow-lg drop-shadow-md p-2 transition-all duration-300 hover:opacity-75 hover:-translate-y-1'
+                        className={cn('rounded-full bg-slate-100 shadow-lg drop-shadow-md p-2 transition-all duration-300 hover:opacity-75 hover:-translate-y-1', className)}
                     >
                         <Plus/>
                     </DialogTrigger>

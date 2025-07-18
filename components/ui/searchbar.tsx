@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useRef } from "react"
 
 import { Input } from '@/components/ui/input'
 
@@ -14,18 +14,28 @@ const Searchbar = ({ startValue = "" } : {
   const [searchTerm, setSearchTerm] = useState<string>(startValue)
   const router = useRouter()
 
+  // ---
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
   return (
-    <div className='w-full p-4 flex justify-center items-center'>
-        <Input
-            className='w-full lg:w-[75%] shadow-md rounded-2xl'
-            placeholder='Search tags...'
-            value={searchTerm}
-            onChange={({ target }) => setSearchTerm(target.value)}
-            onKeyUp={(e) => {
-              if (e.key === 'Enter' && searchTerm.trim() != "") router.push(`/main/search/${encodeURIComponent(searchTerm)}`)
-              else if (e.key === 'Enter' && searchTerm.trim() === "" && startValue) router.push(`/main`)
-            }}
-          />
+    <div className="w-full flex items-center shadow-md rounded-2xl border-[1px] px-3 bg-white">
+      <Search
+        className="text-gray-400 cursor-pointer w-fit"
+        size={16}
+        onClick={() => {if (inputRef.current) inputRef.current.focus()}}
+        />
+      <Input
+        className='border-none focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none w-full'
+        placeholder='Search quotos...'
+        ref={inputRef}
+        value={searchTerm}
+        onChange={({ target }) => setSearchTerm(target.value)}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter' && searchTerm.trim() != "") router.push(`/main/search/${encodeURIComponent(searchTerm)}`)
+          else if (e.key === 'Enter' && searchTerm.trim() === "" && startValue) router.push(`/main`)
+        }}
+    />
     </div>
   )
 }
