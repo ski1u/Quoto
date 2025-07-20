@@ -1,11 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Avatar, AvatarFallback } from './avatar'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
-import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription, DialogHeader } from './dialog'
+import { Dialog, DialogTrigger } from './dialog'
 import { Card } from './card'
 import { Badge } from './badge'
 import { Button } from './button'
@@ -25,7 +25,8 @@ import { format } from 'date-fns'
 
 import { useRouter } from 'next/navigation'
 
-import { likeQuoto, bookmarkQuoto, deleteQuoto } from '@/app/main/action'
+import { useDeleteQuoto } from '@/hooks/useQuotosCRUD'
+import { likeQuoto, bookmarkQuoto } from '@/app/main/action'
 import { useQuotoForm } from '@/data/quoto-form-data'
 
 export const TooltipButton = ({ children, text, side = "right" } : {
@@ -61,6 +62,10 @@ const QuotoCard = ({ args, user, clickable, className } : {
     const userId = user?.id
     const [editDialogOpen, setEditDialogOpen] = React.useState(false)
     const router = useRouter()
+
+    // ---
+
+    const { mutate: deleteQuoto } = useDeleteQuoto()
 
     // ---
 
@@ -109,12 +114,15 @@ const QuotoCard = ({ args, user, clickable, className } : {
             toast.error("Failed to bookmark Quoto")
         }
     }
-    const onDeleteQuoto = async (id: string) => {
-        try {
-            await deleteQuoto(id)
-            toast.success("Successfully deleted a Quoto")
-        } catch (error) {toast.error("An error occurred")}
-    }
+    const onDeleteQuoto = async (id: string) => deleteQuoto(
+        { id },
+        {
+            onSuccess: () => {
+                toast.success("Successfully deleted a Quoto")
+                console.log("yes")
+            }
+        }
+    )
 
     // ---
 
@@ -122,7 +130,7 @@ const QuotoCard = ({ args, user, clickable, className } : {
     
     return (
         <Card
-            className={cn('p-3 z-[1] h-fit break-inside-avoid hover:opacity-80 transition-all duration-300', `${(clickable) && "cursor-pointer"}`, className)}
+            className={cn('p-3 z-[1] h-fit break-inside-avoid hover:opacity-65 transition-all duration-300', `${(clickable) && "cursor-pointer"}`, className)}
             onClick={() => {if (clickable) router.push(`/main/quoto/${id}`)}}
         >
             <div 

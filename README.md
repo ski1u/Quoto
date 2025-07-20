@@ -12,4 +12,4 @@ Revamping
 - file organization
 - responsive layout
 - delete unnecessary files (graphql)
-- route url best practices  
+- route url best practices

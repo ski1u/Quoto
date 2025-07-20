@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import QuotoCard from '@/components/ui/quoto-card'
 import QuotoButton from '@/components/ui/quoto-button'
@@ -8,11 +8,12 @@ import Searchbar from '@/components/ui/searchbar'
 import UserProfileButton from '@/components/ui/user-profile-button'
 import { SpinningLoader } from '@/components/ui/loading-screen'
 import FilterSelect from '@/components/ui/filter-select'
+import LoadingScreen from '@/components/ui/loading-screen'
 
-import useLoader from '@/components/useLoader'
-import useQuotos from '@/components/useQuotos'
+import { useQuotos } from '@/hooks/useQuotos'
 import { useApp } from '@/components/AppProvider'
 import { useRouter } from 'next/navigation'
+import { useInView } from 'react-intersection-observer'
 
 import Image from 'next/image'
 
@@ -20,31 +21,22 @@ import quotoLogo from "@/assets/quoto-logo.svg"
 
 const Main = () => {
   const { user } = useApp()
-  const { loading, setLoading } = useLoader(true)
-  const { quotos, quotoLoading, LoadingScreen, ref, inView, hasMore, load } = useQuotos({ pageLimit: 25 })
-  const [filter, setFilter] = useState<string>("")
+  const { quotos, quotoLoading, initialLoading, hasMore, load } = useQuotos({ pageLimit: 10 })
+  // const [filter, setFilter] = useState<string>("")
 
   const router = useRouter()
-
-  const hasInitialLoaded = useRef(false)
+  const { ref, inView } = useInView({
+    threshold: 0.2
+  })
 
   // ---
 
-  useEffect(() => {if (!user?.user_metadata["full_name"]) router.push("/main/upboarding")}, [user, router])
-  useEffect(() => {
-    if (!hasInitialLoaded.current) {
-      load()
-      hasInitialLoaded.current = true
-      setLoading(false)
-    }
-  }, [])
+  if (!user) return <LoadingScreen/>
+  if (!user?.user_metadata["full_name"]) {router.push("/main/upboarding"); return null}
   useEffect(() => {
       if (inView && !quotoLoading && hasMore) load()
-  }, [inView])
-
-  // ---
-
-  if (loading) return <LoadingScreen/>
+  }, [inView, quotoLoading, hasMore, load])
+  if (quotoLoading && quotos.length === 0) return <LoadingScreen/>
 
   return (
     <div
@@ -76,19 +68,19 @@ const Main = () => {
       <div className='flex justify-center'>
         <div className='w-full columns-2 lg:columns-4 xl:columns-5 space-y-4'>
           {quotos.map((data, dummyIndex) => (
-            <QuotoCard clickable args={data} user={user} key={dummyIndex} />
+            <QuotoCard clickable args={data} user={user} key={data.id} />
           ))}
         </div>
       </div>
 
-      {quotoLoading && (
+      {quotoLoading && quotos.length > 0 && (
         <div
           className='flex justify-center items-center'
         >
           <SpinningLoader/>
         </div>
       )}
-      {!hasMore && (
+      {!hasMore && !quotoLoading && !initialLoading && (
         <div
         className='flex justify-center items-center'
       >

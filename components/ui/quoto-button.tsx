@@ -18,7 +18,8 @@ import { Plus } from 'lucide-react'
 
 import { toast } from 'sonner'
 
-import { createQuoto, updateQuoto } from '@/app/main/action'
+import { useCreateQuoto, useUpdateQuoto } from '@/hooks/useQuotosCRUD'
+// import { createQuoto, updateQuoto } from '@/app/main/action'
 
 const QuotoForm = ({ form, args, mode, onSuccess }: {
     form: ReturnType<typeof useQuotoForm>
@@ -39,6 +40,13 @@ const QuotoForm = ({ form, args, mode, onSuccess }: {
     const [loading, setLoading] = useState<boolean>(false)
     const isEditing = mode === "edit"
 
+    // ---
+
+    const { mutate: createQuoto } = useCreateQuoto()
+    const { mutate: updateQuoto } = useUpdateQuoto()
+
+    // ---
+
     // Populate form fields when args is provided
     useEffect(() => {
         if (args) {
@@ -54,8 +62,8 @@ const QuotoForm = ({ form, args, mode, onSuccess }: {
         setLoading(true)
 
         try {
-            if (isEditing && args) await updateQuoto(args.id, data)
-            else await createQuoto(data)
+            if (isEditing && args) await updateQuoto({ id: args.id, ...data })
+            else await createQuoto({ ...data })
             
             form.reset()
 
