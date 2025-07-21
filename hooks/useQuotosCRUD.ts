@@ -34,19 +34,16 @@ export const createOptimisticMutation = <TData, TVariables>(
     queryKey: string[],
     mutationFn: (variables: TVariables) => Promise<any>,
     updater: (old: TData, variables: TVariables) => TData,
-    onSuccess?: () => void,
-    onFailure?: () => void
   ) => {
     const queryClient = useQueryClient()
   
     return useMutation({
       mutationFn,
       onMutate: async (variables: TVariables) =>
-        onMutateBP(queryClient, queryKey, (old) => updater(old as TData, variables)),
+        onMutateBP(queryClient, queryKey, (old) => updater((old ?? []) as TData, variables)),
       onError: (_err, _variables, context) =>
         onError(queryClient, queryKey, context),
-      onSettled: () => onSettled(queryClient, queryKey),
-      onSuccess,
+      onSettled: () => onSettled(queryClient, queryKey)
     })
   }
 
@@ -65,7 +62,7 @@ export function useCreateQuoto() {
             }).single(); if (error) throw error
             return data
         },
-        (old, newQuoto) => [...old, { id: Date.now(), ...newQuoto, optimistic: true }]
+        (old, newQuoto) => [...(old ?? []), { id: Date.now(), ...newQuoto, optimistic: true }]
     )
 }
 export function useUpdateQuoto() {
@@ -75,6 +72,7 @@ export function useUpdateQuoto() {
     >(
         queryKey,
         async (args) => {
+            console.log("updating")
             const { supabase, user } = await supabaseAction()
             const { data, error } = await supabase.from("quotos").update({
               ...args,
@@ -86,7 +84,7 @@ export function useUpdateQuoto() {
             }).single(); if (error) throw error
             return data
         },
-        (old, updatedQuoto) => old.map(
+        (old, updatedQuoto) => (old ?? []).map(
             q => q.id === updatedQuoto.id ? {
                 ...q,
                 ...updatedQuoto,
@@ -108,10 +106,10 @@ export function useDeleteQuoto() {
             .delete().match({
                 user_id: user?.id,
                 id: args.id
-            }).single(); if (error) throw error
+            }); if (error) throw error
             return data
         },
-        (old, deletedQuoto) => old.filter(
+        (old, deletedQuoto) => (old ?? []).filter(
             q => q.id !== deletedQuoto.id
         )
     )

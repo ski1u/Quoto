@@ -10,10 +10,12 @@ import { shuffleArray } from "@/lib/shuffleArray"
 
 import { quotoInit } from "@/app/api/graphql/schema/type"
 
-export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true } : {
+export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true, id, userInfo } : {
     pageLimit?: number
     searchTerm?: string
     shuffle?: boolean
+    id?: string
+    userInfo?: boolean
 }) {
     const decodedSearch = searchTerm ? decodeURIComponent(searchTerm) : undefined
     const [hasShuffled, setHasShuffled] = useState(false)
@@ -26,10 +28,13 @@ export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true } : {
         queryKey: ["quotos", decodedSearch, shuffle],
         queryFn: async ({ pageParam = 0 }) => {
             const { supabase } = await supabaseAction()
+
+            const { data: { user }, error: userError } = await supabase.auth.getUser()
             let query = supabase.from("quotos").select("*")
             .order("created_at", { ascending: false })
             .range(pageParam * pageLimit, pageParam * pageLimit + pageLimit - 1)
 
+            if (id) {query = query.match({ id })}
             if (decodedSearch) {
                 query = query.or([
                 `quoto.ilike.%${decodedSearch}%`,
@@ -38,16 +43,21 @@ export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true } : {
                 ].join(","))
             }
 
-            const { data, error } = await query; if (error) throw new Error(error.message)
-            if (!hasShuffled && shuffle) {
-                setHasShuffled(true); return shuffleArray(data)
-            }; return data
+            const { data, error } = await query; if (error || userError) throw new Error((error || userError)?.message)
+            const resultData = shuffle && !hasShuffled ? shuffleArray(data) : data
+            if (shuffle && !hasShuffled) setHasShuffled(true)
+
+            return { data: resultData, user }
         },
         getNextPageParam: (lastPage: any, allPages) => lastPage.length < pageLimit ? undefined : allPages.length,
         initialPageParam: 0
     })
 
-    const quotos = data?.pages.flatMap(page => page) ?? []
+    const quotos = data?.pages.flatMap(page => page.data ?? []) ?? []
+    const user =
+    userInfo && data?.pages?.length
+      ? data.pages[data.pages.length - 1].user
+      : null
 
     useEffect(() => {
         const supabase = createClient()
@@ -64,27 +74,35 @@ export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true } : {
               queryClient.setQueryData(["quotos", decodedSearch, shuffle], (oldData: any) => {
                 if (!oldData) return oldData
     
-                const flat = oldData.pages.flatMap((p: any) => p)
+                const flat = oldData.pages.flatMap((p: any) => p.data ?? [])
     
                 switch (payload.eventType) {
                   case "INSERT":
                     return {
                       ...oldData,
-                      pages: [[payload.new as quotoInit, ...flat]],
+                      pages: [{ data: [payload.new as quotoInit, ...flat], user }]
                     }
                   case "UPDATE":
                     return {
                       ...oldData,
                       pages: [
-                        flat.map((q: any) =>
-                          q.id === payload.new.id ? payload.new : q
-                        ),
-                      ],
+                        {
+                          data: flat.map((q: any) =>
+                            q.id === payload.new.id ? payload.new : q
+                          ),
+                          user
+                        }
+                      ]
                     }
                   case "DELETE":
                     return {
                       ...oldData,
-                      pages: [flat.filter((q: any) => q.id !== payload.old.id)],
+                      pages: [
+                        {
+                          data: flat.filter((q: any) => q.id !== payload.old.id),
+                          user
+                        }
+                      ]
                     }
                   default:
                     return oldData
@@ -97,13 +115,16 @@ export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true } : {
         return () => {
           supabase.removeChannel(channel)
         }
-      }, [decodedSearch, shuffle, queryClient])    
+      }, [decodedSearch, shuffle, queryClient, user])    
 
     return {
         quotos,
         hasMore: !!hasNextPage,
         quotoLoading: isFetchingNextPage,
         initialLoading: isLoading,
-        load: fetchNextPage
+        load: fetchNextPage,
+        user: userInfo ? {
+
+        } : null
     }
 }

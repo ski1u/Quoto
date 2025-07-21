@@ -62,8 +62,8 @@ const QuotoForm = ({ form, args, mode, onSuccess }: {
         setLoading(true)
 
         try {
-            if (isEditing && args) await updateQuoto({ id: args.id, ...data })
-            else await createQuoto({ ...data })
+            if (isEditing && args) updateQuoto({ id: args.id, ...data })
+            else createQuoto({ ...data })
             
             form.reset()
 

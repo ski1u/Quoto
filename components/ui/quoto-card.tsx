@@ -114,15 +114,7 @@ const QuotoCard = ({ args, user, clickable, className } : {
             toast.error("Failed to bookmark Quoto")
         }
     }
-    const onDeleteQuoto = async (id: string) => deleteQuoto(
-        { id },
-        {
-            onSuccess: () => {
-                toast.success("Successfully deleted a Quoto")
-                console.log("yes")
-            }
-        }
-    )
+    const onDeleteQuoto = (id: string) => {deleteQuoto({ id })}
 
     // ---
 
@@ -230,7 +222,10 @@ const QuotoCard = ({ args, user, clickable, className } : {
 
                                         <QuotoButtonContent form={editQuotoForm} mode="edit" args={args} onSuccess={() => setEditDialogOpen(false)} />
                                     </Dialog>
-                                    <TooltipButton text='Delete'><Button type='button' onClick={(e) => onDeleteQuoto(id)} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
+                                    <TooltipButton text='Delete'><Button type='button' onClick={(e) => {
+                                        e.stopPropagation()
+                                        onDeleteQuoto(id)
+                                    }} size="sm" variant="destructive"><Trash2/></Button></TooltipButton>
                                 </>}
                             </TooltipProvider>
                         </PopoverContent>
