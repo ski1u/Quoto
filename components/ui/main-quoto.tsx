@@ -99,7 +99,7 @@ const MainQuoto = ({ data, user_metadata, isOwner } : {
             ><ArrowLeft className='mt-2' size={24} /></Link>
 
             <Card
-                className='max-w-[30%] p-6 space-y-1 overflow-hidden'
+                className='max-w-[75%] md:max-w-[50%] xl:max-w-[35%] p-6 space-y-1 overflow-hidden'
             >
                 <div className='flex gap-4'>
                     <div className="w-1/2 space-y-1">

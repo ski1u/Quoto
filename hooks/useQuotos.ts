@@ -9,6 +9,7 @@ import { createClient } from "@/utils/supabase/client"
 import { shuffleArray } from "@/lib/shuffleArray"
 
 import { quotoInit } from "@/app/api/graphql/schema/type"
+import { User } from "@supabase/supabase-js"
 
 export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true, id, userInfo } : {
     pageLimit?: number
@@ -124,7 +125,8 @@ export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true, id, user
         initialLoading: isLoading,
         load: fetchNextPage,
         user: userInfo ? {
-
+          user_metadata: user?.user_metadata as User,
+          user_id: user?.id as User
         } : null
     }
 }

@@ -1,29 +1,37 @@
-import React from 'react'
+"use client"
+
+import React, { use } from 'react'
 
 import MainQuoto from '@/components/ui/main-quoto'
-import LoadingScreen from '@/components/ui/loading-screen'
 
 import { notFound } from 'next/navigation'
 
 import { getQuotoFromId } from '@/utils/data/quotos'
 import { useQuotos } from '@/hooks/useQuotos'
 
-const Quoto = async ({ params } : {
-    params: { id: string }
+import { Quoto } from '@/data/quotos'
+
+const QuotoMainPage = ({ params } : {
+    params: Promise<{ id: string }>
 }) => {
-    const { id } = await params
-    const res = useQuotos({ id }); if (!res) notFound()
+    const { id } = use(params)
+    const res = useQuotos({ id, userInfo: true }); if (!res) notFound()
     
     // ---
 
-    const { quotos, user_metadata, isOwner } = res
+    const { quotos, user } = res
+
+    const { user_metadata, user_id } = user!
+    const isOwner = String(user_id) === id
+
+    const quoto = quotos[0] as Quoto
 
     return (
         <div
             className='h-screen w-screen flex justify-center items-center'
         >
             <MainQuoto
-                data={data}
+                data={quoto}
                 user_metadata={user_metadata}
                 isOwner={isOwner}
             />
@@ -31,4 +39,4 @@ const Quoto = async ({ params } : {
     )
 }
 
-export default Quoto
+export default QuotoMainPage
