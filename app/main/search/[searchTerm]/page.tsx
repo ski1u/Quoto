@@ -1,17 +1,20 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 
 import QuotoButton from '@/components/ui/quoto-button'
 import UserProfileButton from '@/components/ui/user-profile-button'
 import Searchbar from '@/components/ui/searchbar'
 import QuotoCard from '@/components/ui/quoto-card'
 import { SpinningLoader } from '@/components/ui/loading-screen'
+import LoadingScreen from '@/components/ui/loading-screen'
+
 
 import { useApp } from '@/components/AppProvider'
 import useLoader from '@/components/useLoader'
-import useQuotos from '@/components/useQuotos'
+import { useQuotos } from '@/hooks/useQuotos'
 import { useRouter } from 'next/navigation'
+import { useInView } from 'react-intersection-observer'
 
 import Image from 'next/image'
 
@@ -23,75 +26,75 @@ const SearchPage = ({ params } : {
     const searchTerm = decodeURIComponent(React.use<any>(params).searchTerm)
     const { loading, setLoading } = useLoader(true)
     const { user } = useApp()
-    const { quotos, quotoLoading, LoadingScreen, ref, inView, hasMore, load } = useQuotos({ pageLimit: 25, searchTerm, shuffle: false })
+    const { quotos, quotoLoading, initialLoading, hasMore, load } = useQuotos({ pageLimit: 25, searchTerm, shuffle: false })
 
     const router = useRouter()
+  const { ref, inView } = useInView({
+    threshold: 0.2
+  })
 
-    const hasInitialLoaded = useRef(false)
-  
-    // ---
-  
-    useEffect(() => {if (!user?.user_metadata["full_name"]) router.push("/main/upboarding")}, [user, router])
-    useEffect(() => {
-      if (!hasInitialLoaded.current) {
-        load()
-        hasInitialLoaded.current = true
-        setLoading(false)
-      }
-    }, [])
-    useEffect(() => {
-        if (inView && !quotoLoading && hasMore) load()
-    }, [inView])
-  
-    // ---
-  
-    if (loading) return <LoadingScreen/>
-  
-    return (
-      <div
-        className='h-screen w-screen xl:space-y-6 relative overflow-x-hidden'
-      >
-        <QuotoButton/>
-        <UserProfileButton
-          author={user?.user_metadata.full_name as string}
-          user_id={user?.id as string}
-        />
-  
-        <Image
-          alt="quoto-logo"
-          src={quotoLogo}
-          className='absolute top-4 left-16 cursor-pointer hidden'
-          width={108}
-          onClick={() => router.push("/")}
-        />
-  
-        <Searchbar startValue={searchTerm} />
-        <div className='flex justify-center'>
-          <div className='w-full lg:w-[75%] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 space-y-4 p-4'>
-            {quotos.map((data, dummyIndex) => (
-              <QuotoCard clickable args={data} user={user} key={dummyIndex} />
-            ))}
-          </div>
+  // ---
+
+  if (!user) return <LoadingScreen/>
+  if (!user?.user_metadata["full_name"]) {router.push("/main/onboarding"); return null}
+  useEffect(() => {
+      if (inView && !quotoLoading && hasMore) load()
+  }, [inView, quotoLoading, hasMore, load])
+  if (quotoLoading && quotos.length === 0) return <LoadingScreen/>
+
+  return (
+    <div
+      className='h-screen w-screen relative overflow-x-hidden
+      xl:px-64 space-y-6
+      lg:px-40
+      md:px-32
+      sm:px-24
+      px-10
+      '
+    >
+      <QuotoButton className='hidden sm:block' />
+      <UserProfileButton
+        author={user?.user_metadata.full_name as string}
+        user_id={user?.id as string}
+        className='hidden sm:block'
+      />
+
+      <Image
+        alt="quoto-logo"
+        src={quotoLogo}
+        className='absolute left-16 cursor-pointer hidden xl:block'
+        width={108}
+        onClick={() => router.push("/")}
+      />
+
+      <Searchbar/>
+      {/* <FilterSelect state={filter} setState={setFilter} /> */}
+      <div className='flex justify-center'>
+        <div className='w-full columns-2 lg:columns-4 xl:columns-5 space-y-4 transition-all duration-300'>
+          {quotos.map((data) => (
+            <QuotoCard clickable args={data} user={user} key={data.id} />
+          ))}
         </div>
-  
-        {quotoLoading && (
-          <div
-            className='flex justify-center items-center'
-          >
-            <SpinningLoader/>
-          </div>
-        )}
-        {!hasMore && (
-          <div
+      </div>
+
+      {quotoLoading && quotos.length > 0 && (
+        <div
           className='flex justify-center items-center'
         >
-          <p className='text-gray-600 font-semibold'>Seems like you've reached the end of the page...</p>
+          <SpinningLoader/>
         </div>
-        )}
-  
-        <div ref={ref} className='h-24' />
+      )}
+      {!hasMore && !quotoLoading && !initialLoading && (
+        <div
+        className='flex justify-center items-center'
+      >
+        <p className='text-gray-600 font-semibold'>Seems like you've reached the end of the page...</p>
       </div>
-    )
+      )}
+
+      <div ref={ref} className='h-24' />
+    </div>
+  )
 }
 
 export default SearchPage

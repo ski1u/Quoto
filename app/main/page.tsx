@@ -32,7 +32,7 @@ const Main = () => {
   // ---
 
   if (!user) return <LoadingScreen/>
-  if (!user?.user_metadata["full_name"]) {router.push("/main/upboarding"); return null}
+  if (!user?.user_metadata["full_name"]) {router.push("/main/onboarding"); return null}
   useEffect(() => {
       if (inView && !quotoLoading && hasMore) load()
   }, [inView, quotoLoading, hasMore, load])

@@ -27,7 +27,7 @@ import { upboardAction } from '@/app/actions'
 import { useApp } from '../AppProvider'
 import { useRouter } from 'next/navigation'
 
-const UpboardQuestions = () => {
+const OnboardQuestions = () => {
     const { user } = useApp()
     const router = useRouter()
 
@@ -204,4 +204,4 @@ const UpboardQuestions = () => {
   ) : <LoadingScreen/>
 }
 
-export default UpboardQuestions
+export default OnboardQuestions

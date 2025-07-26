@@ -2,7 +2,20 @@
 
 import { createAdminClient } from "@/utils/supabase/admin"
 import { createClient } from "@/utils/supabase/server"
-import { encodedRedirect } from "@/utils/utils"
+
+import { Quoto } from "@/data/quotos"
+
+export interface ProfileData {
+    user: { last_sign_in_at: string, created_at: string },
+    user_metadata:{
+        full_name: string, role: "Creator" | "Seeker" | "Both",
+        liked_quotos: [], bookmarked_quotos: [], description: string
+    },
+    quotos: Quoto[],
+    isOwnProfile: boolean
+}
+
+export type ProfileType = ProfileData | { error: string }
 
 export const fetchProfileData = async (userId: string) => {
     const adminSupabase = await createAdminClient()
