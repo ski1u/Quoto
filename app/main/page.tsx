@@ -66,8 +66,8 @@ const Main = () => {
       <Searchbar/>
       {/* <FilterSelect state={filter} setState={setFilter} /> */}
       <div className='flex justify-center'>
-        <div className='w-full columns-2 lg:columns-4 xl:columns-5 space-y-4'>
-          {quotos.map((data, dummyIndex) => (
+        <div className='w-full columns-2 lg:columns-4 xl:columns-5 space-y-4 transition-all duration-300'>
+          {quotos.map((data) => (
             <QuotoCard clickable args={data} user={user} key={data.id} />
           ))}
         </div>

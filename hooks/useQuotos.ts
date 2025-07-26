@@ -75,38 +75,34 @@ export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true, id, user
               queryClient.setQueryData(["quotos", decodedSearch, shuffle], (oldData: any) => {
                 if (!oldData) return oldData
     
-                const flat = oldData.pages.flatMap((p: any) => p.data ?? [])
-    
-                switch (payload.eventType) {
-                  case "INSERT":
-                    return {
-                      ...oldData,
-                      pages: [{ data: [payload.new as quotoInit, ...flat], user }]
-                    }
-                  case "UPDATE":
-                    return {
-                      ...oldData,
-                      pages: [
-                        {
-                          data: flat.map((q: any) =>
+                return {
+                  ...oldData,
+                  pages: oldData.pages.map((page: any, pageIndex: number) => {
+                    const pageData = page.data ?? []
+              
+                    switch (payload.eventType) {
+                      case "INSERT": {
+                        const exists = pageData.some((q: any) => q.id === payload.new.id)
+                        return pageIndex === 0 && !exists
+                          ? { ...page, data: [payload.new, ...pageData] }
+                          : page
+                      }
+                      case "UPDATE":
+                        return {
+                          ...page,
+                          data: pageData.map((q: any) =>
                             q.id === payload.new.id ? payload.new : q
                           ),
-                          user
                         }
-                      ]
-                    }
-                  case "DELETE":
-                    return {
-                      ...oldData,
-                      pages: [
-                        {
-                          data: flat.filter((q: any) => q.id !== payload.old.id),
-                          user
+                      case "DELETE":
+                        return {
+                          ...page,
+                          data: pageData.filter((q: any) => q.id !== payload.old.id),
                         }
-                      ]
+                      default:
+                        return page
                     }
-                  default:
-                    return oldData
+                  }),
                 }
               })
             }
