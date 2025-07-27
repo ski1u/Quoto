@@ -5,19 +5,16 @@ import React, { useEffect, useState } from 'react'
 import LoadingScreen from '@/components/ui/loading-screen'
 import Profile from '@/components/ui/profile'
 
-import { fetchProfileData } from '../user/[user_id]/action'
-
-import { useAuth } from '@/components/AuthProvider'
-
-import { ProfileType } from '../user/[user_id]/action'
+import { UserFetchType, fetchUser } from '@/lib/fetchUser'
 
 const ProfilePage = () => {
-  const [profile, setProfile] = useState<ProfileType | null>()
-  const { user } = useAuth()
+  const [profile, setProfile] = useState<UserFetchType | null>(null)
 
-  useEffect(() => {if (!user?.id) return; fetchProfileData(user.id).then(setProfile)}, [user])
+  useEffect(() => {
+    fetchUser({ additional: true }).then(user => { if (user) setProfile(user) })
+  }, [])
 
-  return profile ? <Profile data={profile} /> : <LoadingScreen/>
+  return profile ? <Profile data={profile} isOwnProfile={true} /> : <LoadingScreen/>
 }
 
 export default ProfilePage

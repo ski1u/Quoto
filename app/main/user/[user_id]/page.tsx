@@ -1,8 +1,9 @@
 import React from 'react'
 
-import { fetchProfileData } from './action'
+import { fetchUser } from '@/lib/fetchUser'
 
 import Profile from '@/components/ui/profile'
+import LoadingScreen from '@/components/ui/loading-screen'
 
 const User = async ({ params } : {
   params : {
@@ -10,9 +11,9 @@ const User = async ({ params } : {
   }
 }) => {
   const { user_id } = await params
-  const fetchedData = await fetchProfileData(user_id)
+  const profile = await fetchUser({ uuid: user_id, additional: true })
 
-  return <Profile data={fetchedData} />
+  return profile ? <Profile data={profile} isOwnProfile={false} /> : <LoadingScreen/>
 }
 
 export default User

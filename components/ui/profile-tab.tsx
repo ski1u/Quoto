@@ -6,15 +6,15 @@ import ProfileHighlighter from './profile-highlighter'
 
 import { format, formatDistanceToNow } from 'date-fns'
 
-import { UserMetadata } from '@supabase/supabase-js'
+import { UserFetchType } from '@/lib/fetchUser'
 
-
-const ProfileTab = ({ fetchedProfile } : {
-    fetchedProfile: UserMetadata
+const ProfileTab = ({ fetchedProfile, isOwnProfile } : {
+    fetchedProfile: UserFetchType
+    isOwnProfile: boolean
 }) => {
-    const { user, user_metadata, quotos, isOwnProfile } = fetchedProfile
-    const { full_name, role, liked_quotos, bookmarked_quotos, description } = user_metadata!
-    const { last_sign_in_at, created_at } = user!
+    const { metadata, additional } = fetchedProfile
+    const { full_name, role, description } = metadata!
+    const { quotos, last_sign_in_at, created_at } = additional!
 
     // ---
 
@@ -28,11 +28,11 @@ const ProfileTab = ({ fetchedProfile } : {
         <CardHeader>
           <CardTitle className='flex justify-between'>
             <p>{full_name}</p>
-            {isOwnProfile && <EditProfile args={{ full_name, description }} />}
+            {isOwnProfile && <EditProfile args={{ full_name: full_name ?? "", description: description ?? "" }} />}
           </CardTitle>
           <CardDescription>
             <div>
-              <p className='font-medium'>{role[0].toUpperCase() + role.slice(1, role.length)}</p>
+              <p className='font-medium'>{role![0].toUpperCase() + role!.slice(1, role!.length)}</p>
               <div className='flex flex-row items-center space-x-2'>
                 <p>Joined {format(created_at as string, "MMM do, yyyy")}</p>
                 <div className='rounded-full bg-gray-300 p-[2px]' />
