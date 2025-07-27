@@ -28,8 +28,8 @@ export const fetchProfileData = async (userId: string) => {
         
     // ---
 
-    const last_sign_in_at = getUser?.last_sign_in_at
-    const created_at = getUser?.created_at
+    const last_sign_in_at = getUser?.last_sign_in_at || ""
+    const created_at = getUser?.created_at || ""
 
     // ---
 

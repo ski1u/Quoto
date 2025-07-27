@@ -8,7 +8,6 @@ import { createClient } from "@/utils/supabase/client"
 
 import { shuffleArray } from "@/lib/shuffleArray"
 
-import { quotoInit } from "@/app/api/graphql/schema/type"
 import { User } from "@supabase/supabase-js"
 
 export function useQuotos({ pageLimit = 20, searchTerm, shuffle = true, id, userInfo } : {

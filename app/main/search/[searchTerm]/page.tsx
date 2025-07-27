@@ -9,9 +9,8 @@ import QuotoCard from '@/components/ui/quoto-card'
 import { SpinningLoader } from '@/components/ui/loading-screen'
 import LoadingScreen from '@/components/ui/loading-screen'
 
-
-import { useApp } from '@/components/AppProvider'
-import useLoader from '@/components/useLoader'
+import { useAuth } from '@/components/AuthProvider'
+import useLoader from '@/hooks/useLoader'
 import { useQuotos } from '@/hooks/useQuotos'
 import { useRouter } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
@@ -25,7 +24,7 @@ const SearchPage = ({ params } : {
 }) => {
     const searchTerm = decodeURIComponent(React.use<any>(params).searchTerm)
     const { loading, setLoading } = useLoader(true)
-    const { user } = useApp()
+    const { user } = useAuth()
     const { quotos, quotoLoading, initialLoading, hasMore, load } = useQuotos({ pageLimit: 25, searchTerm, shuffle: false })
 
     const router = useRouter()

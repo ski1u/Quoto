@@ -16,7 +16,7 @@ import { ProfileType } from '@/app/main/user/[user_id]/action'
 const Profile = ({ data } : {
     data: ProfileType
 }) => {
-    return data?.user_metadata ? (
+    return 'user_metadata' in data ? (
         <div
           className='w-screen h-screen flex justify-center items-center'
         >

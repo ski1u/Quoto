@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-type upboarding_questions_data_type = Array<{
+type onboarding_questions_data_type = Array<{
   id: string,
   question: string,
   type: "text" | "select" | "multi-select",
@@ -9,14 +9,14 @@ type upboarding_questions_data_type = Array<{
   placeholder?: string
 }>
 
-/* export type upboarding_questions_formData = {
+/* export type onboarding_questions_formData = {
   full_name: string
   how_found: 'friend' | 'instagram' |'search-engine' |'github' | 'other'
   role: "creator" | "seeker" | "both"
   preference: string[]
 } */
 
-export const upboarding_questions_data: upboarding_questions_data_type = [
+export const onboarding_questions_data: onboarding_questions_data_type = [
     {
       id: 'full_name',
       question: "What's a full name would you like to go by?",
@@ -50,14 +50,14 @@ export const upboarding_questions_data: upboarding_questions_data_type = [
       required: true
     },
     {
-      id: 'preference',
+      id: 'preferences',
       question: "What types of topics do you enjoy?",
       type: 'multi-select',
       options: ['Motivational', 'Spiritual', 'Mental Health', 'Philosophical']
     },
 ]
 
-export const upboarding_questions_schema = z.object({
+export const onboarding_questions_schema = z.object({
   full_name: z
     .string()
     .min(3, { message: "Name should be larger than 3 characters" })
@@ -67,5 +67,5 @@ export const upboarding_questions_schema = z.object({
     }),
   how_found: z.enum(['friend', 'instagram', 'search-engine', 'github', 'other'], { required_error: "Please select how you found this app" }),
   role: z.enum(['creator', 'seeker', 'both'], { required_error: "Please select your role" }),
-  preference: z.array(z.string()).optional(),
+  preferences: z.array(z.string()).optional(),
 })

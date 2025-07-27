@@ -7,23 +7,21 @@ import { redirect } from "next/navigation";
 
 import { Provider } from "@supabase/supabase-js";
 
-import { upboarding_questions_schema as qSchema } from "@/data/upboarding-questions-data";
+import { onboarding_questions_schema } from "@/data/onboarding-questions-data";
 import { z } from "zod";
 
-export const upboardAction = async (formData: z.infer<typeof qSchema>) => {
-  const { full_name, how_found, role, preference } = formData
-
+export const onboardAction = async (data: z.infer<typeof onboarding_questions_schema>) => {
   const supabase = await createClient()
-  const { error } = await supabase.auth.updateUser({
-    data: { full_name, how_found, role, preference,
-      liked_quotos: [], bookmarked_quotos: [], dark_mode: false,
-      description: ""
-    }
-  }); if (error) return encodedRedirect("error", "/sign-in", error.message);
 
-  // ---
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  const { error } = await supabase.from("profiles").update({
+    ...data,
+    has_onboarded: true
+  }).match({ id: user?.id })
 
-  return redirect("/main")
+  if (error || userError) return encodedRedirect("error", "/main/onboarding", "Error while onboarding");
+
+  redirect("/main")
 }
 
 export const signUpAction = async (formData: { email: string, password: string }) => {
@@ -69,9 +67,7 @@ export const signInAction = async (formData: { email: string, password: string }
     password,
   });
 
-  if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
-  }
+  if (error) return encodedRedirect("error", "/sign-in", error.message);
   
   return redirect("/main");
 };

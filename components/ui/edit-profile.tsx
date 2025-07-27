@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 
-import useLoader from '../useLoader'
+import useLoader from '@/hooks/useLoader'
 
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'

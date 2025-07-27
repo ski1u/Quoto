@@ -37,7 +37,7 @@ const UserProfileButton = ({ author, user_id, className } : {
                     text='Profile'
                     side='left'
                 >
-                    <Link href={`/main/profile/${user_id}`}>
+                    <Link href={`/main/profile`}>
                         <Button
                             size="sm"
                             variant="outline"

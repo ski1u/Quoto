@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import LoadingScreen from './ui/loading-screen'
+import LoadingScreen from '@/components/ui/loading-screen'
 
 const useLoader = (init?: boolean) => {
     const [loading, setLoading] = useState<boolean>(init || false)

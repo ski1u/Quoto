@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
 import { Input } from './input'
@@ -20,25 +20,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from "zod"
 
-import { upboarding_questions_schema as qSchema, upboarding_questions_data as qData } from '@/data/upboarding-questions-data'
+import { onboarding_questions_schema as qSchema, onboarding_questions_data as qData } from '@/data/onboarding-questions-data'
 
-import { upboardAction } from '@/app/actions'
-
-import { useApp } from '../AppProvider'
-import { useRouter } from 'next/navigation'
+import { onboardAction } from '@/app/actions'
 
 const OnboardQuestions = () => {
-    const { user } = useApp()
-    const router = useRouter()
-
     const [step, setStep] = useState<number>(0)
-    const [loading, setLoading] = useState<boolean>(true)
-
-    useEffect(() => {
-        if (user) {
-          if (user.user_metadata.full_name) router.push("/main"); else setLoading(false)
-        }
-      }, [user, router])
+    const [loading, setLoading] = useState<boolean>(false)
 
     // ---
 
@@ -58,7 +46,7 @@ const OnboardQuestions = () => {
     const onFinish = form.handleSubmit(async (data: z.infer<typeof qSchema>) => {
         setLoading(true)
         // console.log("Finished", data)
-        await upboardAction(data)
+        await onboardAction(data)
         toast.success("Successfully submitted!")
     })
 
