@@ -90,7 +90,7 @@ const OnboardQuestions = () => {
                             const { id, question, type, required, placeholder, options } = qData[step]
 
                             return (<FormField
-                                key={`upboarding-question-${id}`}
+                                key={`onboarding-question-${id}`}
                                 control={form.control}
                                 name={id as keyof z.infer<typeof qSchema>}
                                 render={({ field }) => {
@@ -109,7 +109,7 @@ const OnboardQuestions = () => {
                                                         <Input
                                                             className='shadow-none outline-none ring-0 border-0 border-b-2 w-2/3'
                                                             placeholder={placeholder}
-                                                            key={`upboarding-input-${id}`}
+                                                            key={`onboarding-input-${id}`}
                                                             {...field}
                                                             value={field.value ?? ""}
                                                         />
@@ -127,7 +127,7 @@ const OnboardQuestions = () => {
                                                                 const value = typeof option === 'string' ? option : option.value;
                                                                 const label = typeof option === 'string' ? option : option.option;
 
-                                                                    return <SelectItem key={`upboarding-select-${id}-${optionIndex}`} value={value}>{label}</SelectItem>
+                                                                    return <SelectItem key={`onboarding-select-${id}-${optionIndex}`} value={value}>{label}</SelectItem>
                                                                 })}
                                                             </SelectContent>
                                                         </Select>
@@ -157,7 +157,7 @@ const OnboardQuestions = () => {
 
                                                                             return (
                                                                                 <div
-                                                                                    key={`upboarding-multiselect-${optionIndex}`}
+                                                                                    key={`onboarding-multiselect-${optionIndex}`}
                                                                                     className='flex items-center space-x-[2px] cursor-pointer'
                                                                                 >
                                                                                     <Checkbox

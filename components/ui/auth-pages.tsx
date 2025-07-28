@@ -73,7 +73,7 @@ const AuthPages = ({fields, title, submitLabel, footerLabel, footerLabelLink, fo
     const formSubmitHandler = form.handleSubmit(async (values : z.infer<typeof zodSchema>) => {
         setLoading(true)
         const res = await submitHandler(values); // console.log(success, error)
-        if (!res) {toast.success(toastSuccessMessage || "Success"); router.push("/dashboard")}
+        if (!res) {toast.success(toastSuccessMessage || "Success"); router.push("/main")}
         else toast.error(res?.error || "Unknown error")
         setLoading(false)
     })

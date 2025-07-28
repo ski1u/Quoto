@@ -23,7 +23,7 @@ const onMutateBP = async <TData>(
     queryKey: string[],
     updater: (old: TData | undefined) => TData
 ) => {
-    await queryClient.cancelQueries({ queryKey: queryKey })
+    await queryClient.cancelQueries({ queryKey })
     const prevQuotos = queryClient.getQueryData<TData>(queryKey)
 
     queryClient.setQueryData<TData>(queryKey, updater)
@@ -54,12 +54,14 @@ export function useCreateQuoto() {
     >(
         queryKey,
         async (args) => {
-            const { supabase, user } = await supabaseAction()
+            console.log("ran")
+            const { supabase, user, metadata } = await supabaseAction()
             const { data, error } = await supabase.from("quotos").insert({
               ...args,
-              author: user?.user_metadata.full_name as string,
+              author: metadata.full_name as string,
               user_id: user?.id,
-            }).single(); if (error) throw error
+              likes: 0
+            }).single(); if (error) console.log(error)
             return data
         },
         (old, newQuoto) => [...(old ?? []), { id: Date.now(), ...newQuoto, optimistic: true }]
@@ -72,16 +74,15 @@ export function useUpdateQuoto() {
     >(
         queryKey,
         async (args) => {
-            console.log("updating")
-            const { supabase, user } = await supabaseAction()
+            const { supabase, user, metadata } = await supabaseAction()
             const { data, error } = await supabase.from("quotos").update({
               ...args,
-              author: user?.user_metadata.full_name as string,
+              author: metadata.full_name as string,
               user_id: user?.id,
             }).match({
                 user_id: user?.id,
                 id: args.id
-            }).single(); if (error) throw error
+            }).single(); if (error) console.log(error)
             return data
         },
         (old, updatedQuoto) => (old ?? []).map(
@@ -106,7 +107,7 @@ export function useDeleteQuoto() {
             .delete().match({
                 user_id: user?.id,
                 id: args.id
-            }); if (error) throw error
+            }); if (error) console.log(error)
             return data
         },
         (old, deletedQuoto) => (old ?? []).filter(

@@ -8,8 +8,8 @@ export const createClient = () =>
 
   export async function supabaseAction() {
     const supabase = await createClient()
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
-    if (userError) throw userError
+    const { data: { user }, error: userError } = await supabase.auth.getUser(); if (userError) throw userError
+    const { data, error } = await supabase.from("profiles").select("*").eq("id", user?.id).single(); if (error) throw error
 
-    return { supabase, user }
+    return { supabase, user, metadata: data }
 }

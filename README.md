@@ -13,3 +13,7 @@ Revamping
 - responsive layout
 - delete unnecessary files (graphql)
 - route url best practices
+
+errors
+- when signing in for the first tine or creating a new account and getting redirected to the main page, encounters an error where author is undefined
+- whenever the user tries to go beyond /main, they get redirected back to /main again immediately

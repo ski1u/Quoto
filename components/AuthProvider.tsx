@@ -34,12 +34,12 @@ export function AuthProvider({ children } : { children: React.ReactNode }) {
         return () => {mounted = false}
     }, [])
     useEffect(() => {
-        if (loading || !data) return
-        else if (!loading || !data) router.replace("/sign-in")
+        if (loading) return
+        if (!data) router.replace("/sign-in")
             
-        const onboarded = data.metadata?.has_onboarded;
-        if (!onboarded && pathname !== "/main/upboarding") { router.replace("/main/upboarding") }
-        else if (onboarded && pathname === "/main/upboarding") { router.replace("/main") }
+        const onboarded = data?.metadata?.has_onboarded;
+        if (!onboarded && pathname !== "/main/onboarding") { router.replace("/main/onboarding") }
+        else if (onboarded && pathname === "/main/onboarding") { router.replace("/main") }
       }, [loading, data?.metadata?.has_onboarded, pathname, router]);
 
     // ---

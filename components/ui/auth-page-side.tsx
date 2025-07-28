@@ -34,7 +34,7 @@ const AuthPageSide = ({ className, children } : {
     
     return (
     <div className='w-screen h-screen flex flex-col sm:flex-row'>
-        <div className='w-full h-full md:w-1/3 flex justify-center items-center shadow-2xl px-4 sm:px-0 md:px-4 lg:px-10 xl:px-32'>
+        <div className='w-full h-full md:w-1/3 flex justify-center items-center shadow-2xl px-4 sm:px-0 md:px-4 lg:px-10 xl:px-16'>
             <Image 
                 className='absolute top-6 left-6 cursor-pointer'
                 alt='quoto-logo' src={quotoLogo} width={108} height={108}

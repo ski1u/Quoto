@@ -10,7 +10,6 @@ import { SpinningLoader } from '@/components/ui/loading-screen'
 import LoadingScreen from '@/components/ui/loading-screen'
 
 import { useAuth } from '@/components/AuthProvider'
-import useLoader from '@/hooks/useLoader'
 import { useQuotos } from '@/hooks/useQuotos'
 import { useRouter } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
@@ -23,23 +22,23 @@ const SearchPage = ({ params } : {
     params : any // { searchTerm: string }
 }) => {
     const searchTerm = decodeURIComponent(React.use<any>(params).searchTerm)
-    const { loading, setLoading } = useLoader(true)
-    const { user } = useAuth()
     const { quotos, quotoLoading, initialLoading, hasMore, load } = useQuotos({ pageLimit: 25, searchTerm, shuffle: false })
+    const { user, metadata } = useAuth()
+    const { full_name } = metadata || {}
 
-    const router = useRouter()
+  const uniqueQuotos = Array.from(new Map(quotos.map(q => [q.id, q])).values());
+
+  const router = useRouter()
   const { ref, inView } = useInView({
     threshold: 0.2
   })
 
   // ---
 
-  if (!user) return <LoadingScreen/>
-  if (!user?.user_metadata["full_name"]) {router.push("/main/onboarding"); return null}
   useEffect(() => {
       if (inView && !quotoLoading && hasMore) load()
   }, [inView, quotoLoading, hasMore, load])
-  if (quotoLoading && quotos.length === 0) return <LoadingScreen/>
+  // if (quotoLoading) return <LoadingScreen/>
 
   return (
     <div
@@ -53,7 +52,7 @@ const SearchPage = ({ params } : {
     >
       <QuotoButton className='hidden sm:block' />
       <UserProfileButton
-        author={user?.user_metadata.full_name as string}
+        author={full_name as string}
         user_id={user?.id as string}
         className='hidden sm:block'
       />
@@ -70,8 +69,8 @@ const SearchPage = ({ params } : {
       {/* <FilterSelect state={filter} setState={setFilter} /> */}
       <div className='flex justify-center'>
         <div className='w-full columns-2 lg:columns-4 xl:columns-5 space-y-4 transition-all duration-300'>
-          {quotos.map((data) => (
-            <QuotoCard clickable args={data} user={user} key={data.id} />
+          {uniqueQuotos.map((data) => (
+            <QuotoCard clickable args={data} user={user!} key={data.id} />
           ))}
         </div>
       </div>

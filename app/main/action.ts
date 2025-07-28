@@ -74,9 +74,12 @@ export const createQuoto = async (
     const { error: userError, data: { user } } = await supabase.auth.getUser()
     if (userError) return encodedRedirect("error", "/main", userError?.message || "User Error");
 
+    const { data, error: metadataError } = await supabase.from("profiles").select("*").eq("id", user?.id as string).single()
+    if (metadataError) return encodedRedirect("error", "/main", metadataError?.message || "User Error");
+
     const { error } = await supabase.from("quotos").insert({
         ...args,
-        author: user?.user_metadata.full_name as string,
+        author: data?.full_name as string,
         likes: 0,
         featured: false,
         created_at: new Date().toISOString(),
