@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 import { Input } from './input'
 import { Button } from './button'
 import { Label } from './label'
@@ -19,12 +18,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, Controller } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import { z } from "zod"
 import { cn } from '@/lib/utils'
 
-import { onboarding_questions_schema as qSchema, onboarding_questions_data as qData } from '@/data/onboarding-questions-data'
+import { onboarding_questions_schema as qSchema, onboarding_questions_data as qData } from '@/data/onboarding'
 
-import { onboardAction } from '@/app/actions'
+import { onboardAction, checkUniqueHandle } from '@/app/actions'
 
 const OnboardInput = ({ className, ...props } : {
     className?: string
@@ -36,14 +36,15 @@ const OnboardInput = ({ className, ...props } : {
         />
     )
 }
-const OnboardBadge = ({ id, checked, onCheckedChange, children, ...props } : {
+const OnboardBadge = ({ id, checked, onCheckedChange, className, children, ...props } : {
     children: React.ReactNode
     checked: boolean
     onCheckedChange: () => void
+    className?: string
 } & React.ComponentProps<typeof Badge>) => {
     return (
         <Badge
-            className={`rounded-full p-2 transition ${checked ? "bg-gray-900 text-white hover:bg-opacity-85" : "hover:bg-gray-100"}`}
+            className={cn(`cursor-pointer rounded-full p-2 transition ${checked ? "bg-gray-900 text-white hover:bg-opacity-85" : "hover:bg-gray-100"}`, className)}
             id={id}
             variant="outline"
             onClick={onCheckedChange}
@@ -90,19 +91,16 @@ const OnboardQuestions = () => {
     const [step, setStep] = useState<number>(0)
     const [loading, setLoading] = useState<boolean>(false)
 
-    // ---
-
     const form = useForm<z.infer<typeof qSchema>>({
         resolver: zodResolver(qSchema),
         mode: "onTouched",
     })
-
-    // ---
+    const router = useRouter()
 
     const onFinish = form.handleSubmit(async (data: z.infer<typeof qSchema>) => {
         setLoading(true)
-        await onboardAction(data)
-        toast.success("Successfully submitted!")
+        const result = await onboardAction(data)
+        if (result?.success) { toast.success("Successfully submitted!"); window.location.href = "/main" }
     })
     const handleStep = async (action: "next" | "prev") => {
         if (action === "prev") {
@@ -113,12 +111,26 @@ const OnboardQuestions = () => {
 
         if (step < qData.length) {
             const currentId = qData[step].id as keyof z.infer<typeof qSchema>
+            
+            // Checking for unique handles for validation
+            if (currentId === 'handle') {
+                const handleValue = form.getValues('handle')
+                if (handleValue) {
+                    const { isUnique, error } = await checkUniqueHandle(handleValue)
+                    if (!isUnique) {
+                        form.setError('handle', { 
+                            type: 'manual', 
+                            message: 'This handle is already taken. Please choose a different one.' 
+                        })
+                        return
+                    }
+                }
+            }
+            
             const valid = await form.trigger(currentId); if (!valid) return
             setStep((s) => s + 1)
         } else await onFinish()
     }
-
-    // ---
 
     const lastMessage = "Ready to get inspired or share your wisdom with the world?"
     
@@ -184,23 +196,44 @@ const OnboardQuestions = () => {
                                                             />
                                                         )
                                                      : type === "select" ? (
-                                                        <Select
-                                                            value={(field.value as string) ?? ""}
-                                                            onValueChange={field.onChange}
-                                                        >
-                                                            <SelectTrigger className='w-2/3'>
-                                                                <SelectValue placeholder={placeholder || "Select Option"} />
-                                                            </SelectTrigger>
+                                                        <Controller
+                                                            control={form.control}
+                                                            name={id as keyof z.infer<typeof qSchema>}
+                                                            defaultValue=""
+                                                            render={({ field }) => {
+                                                                const selectedValue = field.value as string
 
-                                                            <SelectContent>
-                                                                {options?.map((option, optionIndex) => {
-                                                                const value = typeof option === 'string' ? option : option.value;
-                                                                const label = typeof option === 'string' ? option : option.option;
+                                                                return (
+                                                                    <div className='flex flex-wrap gap-3'>
+                                                                        {options?.map((option, optionIndex) => {
+                                                                            const optionValue = typeof option === 'string' 
+                                                                                ? option.split(" ").join("-").toLowerCase()
+                                                                                : option.value;
+                                                                            const optionLabel = typeof option === 'string' ? option : option.option;
+                                                                            const isChecked = selectedValue === optionValue
+                                                                            
+                                                                            const selectOption = () => { field.onChange(optionValue) };
 
-                                                                    return <SelectItem key={`onboarding-select-${id}-${optionIndex}`} value={value}>{label}</SelectItem>
-                                                                })}
-                                                            </SelectContent>
-                                                        </Select>
+                                                                            return (
+                                                                                <div
+                                                                                    key={`onboarding-select-${optionIndex}`}
+                                                                                    className='flex items-center space-x-[2px]'
+                                                                                >
+                                                                                    <OnboardBadge
+                                                                                        id={optionValue}
+                                                                                        checked={isChecked}
+                                                                                        onCheckedChange={selectOption}
+                                                                                        className='rounded-lg'
+                                                                                    >
+                                                                                        <Label className='cursor-pointer' htmlFor={optionValue}>{optionLabel}</Label>
+                                                                                    </OnboardBadge>
+                                                                                </div>
+                                                                            )
+                                                                        })}
+                                                                    </div>
+                                                                )
+                                                            }}
+                                                        />
                                                     ) : type === "multi-select" ? (
                                                         <Controller
                                                             control={form.control}

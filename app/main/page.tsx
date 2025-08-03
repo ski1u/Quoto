@@ -7,8 +7,6 @@ import QuotoButton from '@/components/ui/quoto/quoto-button'
 import Searchbar from '@/components/ui/searchbar'
 import UserProfileButton from '@/components/ui/profile/user-profile-button'
 import { SpinningLoader } from '@/components/ui/loading-screen'
-import FilterSelect from '@/components/ui/filter-select'
-import LoadingScreen from '@/components/ui/loading-screen'
 
 import { useQuotos } from '@/hooks/useQuotos'
 import { useAuth } from '@/components/AuthProvider'

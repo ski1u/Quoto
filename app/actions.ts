@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 import { Provider } from "@supabase/supabase-js";
 
-import { onboarding_questions_schema } from "@/data/onboarding-questions-data";
+import { onboarding_questions_schema } from "@/data/onboarding";
 import { z } from "zod";
 
 export const onboardAction = async (data: z.infer<typeof onboarding_questions_schema>) => {
@@ -21,8 +21,24 @@ export const onboardAction = async (data: z.infer<typeof onboarding_questions_sc
 
   if (error || userError) return encodedRedirect("error", "/main/onboarding", "Error while onboarding");
 
-  redirect("/main")
+  return { success: true }
 }
+
+export const checkUniqueHandle = async (handle: string) => {
+  const supabase = await createClient()
+    
+  const { data, error } = await supabase
+    .from("profiles")
+    .select('handle')
+    .eq('handle', handle)
+    .single()
+  
+  if (error && error.code !== 'PGRST116') return { isUnique: false, error: 'Failed to check handle uniqueness' }
+  
+  return { isUnique: !data, error: null }
+}
+
+// ---
 
 export const signUpAction = async (formData: { email: string, password: string }) => {
   const { email, password } = formData
@@ -72,7 +88,7 @@ export const signInAction = async (formData: { email: string, password: string }
   return redirect("/main");
 };
 
-export async function signInWithOAuthAction(provider: Provider, redirectRoute: string) {
+export const signInWithOAuthAction = async (provider: Provider, redirectRoute: string) => {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
