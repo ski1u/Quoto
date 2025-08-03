@@ -2,7 +2,7 @@ import React from 'react'
 
 import { fetchUser } from '@/lib/fetchUser'
 
-import Profile from '@/components/ui/profile'
+import Profile from '@/components/ui/profile/profile'
 import LoadingScreen from '@/components/ui/loading-screen'
 
 const User = async ({ params } : {

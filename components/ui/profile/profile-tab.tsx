@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../card'
 import EditProfile from './edit-profile'
 import ProfileHighlighter from './profile-highlighter'
 

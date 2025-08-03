@@ -2,10 +2,10 @@
 
 import React, { useEffect } from 'react'
 
-import QuotoCard from '@/components/ui/quoto-card'
-import QuotoButton from '@/components/ui/quoto-button'
+import QuotoCard from '@/components/ui/quoto/quoto-card'
+import QuotoButton from '@/components/ui/quoto/quoto-button'
 import Searchbar from '@/components/ui/searchbar'
-import UserProfileButton from '@/components/ui/user-profile-button'
+import UserProfileButton from '@/components/ui/profile/user-profile-button'
 import { SpinningLoader } from '@/components/ui/loading-screen'
 import FilterSelect from '@/components/ui/filter-select'
 import LoadingScreen from '@/components/ui/loading-screen'

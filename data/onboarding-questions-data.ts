@@ -18,6 +18,13 @@ type onboarding_questions_data_type = Array<{
 
 export const onboarding_questions_data: onboarding_questions_data_type = [
     {
+      id: 'handle',
+      question: "What do you want your handle to be?",
+      type: 'text',
+      required: true,
+      placeholder: 'johndoe',
+    },
+    {
       id: 'full_name',
       question: "What's a full name would you like to go by?",
       type: 'text',
@@ -53,11 +60,41 @@ export const onboarding_questions_data: onboarding_questions_data_type = [
       id: 'preferences',
       question: "What types of topics do you enjoy?",
       type: 'multi-select',
-      options: ['Motivational', 'Spiritual', 'Mental Health', 'Philosophical']
+      options: [
+        '💪 motivational',
+        '🕊️ spiritual',
+        '🧠 mental-health',
+        '💭 philosophical',
+        '🌟 inspirational',
+        '❤️ love',
+        '🤝 friendship',
+        '🏆 success',
+        '🧭 leadership',
+        '😄 happiness',
+        '👐 gratitude',
+        '😂 humor',
+        '🌱 life',
+        '📈 productivity',
+        '📚 learning',
+        '🧘 mindfulness',
+        '🛁 self-care',
+        '🙏 faith',
+        '🦁 courage',
+        '🎨 creativity',
+        '☀️ positivity',
+        '🚀 growth'
+      ]
     },
 ]
 
 export const onboarding_questions_schema = z.object({
+  handle: z
+  .string()
+  .min(3, { message: "Name should be larger than 3 characters" })
+  .max(32, { message: "Name should not be larger than 24 characters" })
+  .regex(/^[a-zA-Z0-9 ]*$/, {
+    message: "Name should only contain letters, numbers, and spaces",
+  }),
   full_name: z
     .string()
     .min(3, { message: "Name should be larger than 3 characters" })

@@ -41,39 +41,51 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          bookmarked_quotos: string[] | null
           created_at: string | null
           description: string | null
           full_name: string | null
+          handle: string | null
           has_onboarded: boolean | null
           how_found: string | null
           id: string
+          liked_quotos: string[] | null
           preferences: string[] | null
           role: string | null
           settings: Json | null
+          subscription_plan: string | null
           updated_at: string | null
         }
         Insert: {
+          bookmarked_quotos?: string[] | null
           created_at?: string | null
           description?: string | null
           full_name?: string | null
+          handle?: string | null
           has_onboarded?: boolean | null
           how_found?: string | null
           id: string
+          liked_quotos?: string[] | null
           preferences?: string[] | null
           role?: string | null
           settings?: Json | null
+          subscription_plan?: string | null
           updated_at?: string | null
         }
         Update: {
+          bookmarked_quotos?: string[] | null
           created_at?: string | null
           description?: string | null
           full_name?: string | null
+          handle?: string | null
           has_onboarded?: boolean | null
           how_found?: string | null
           id?: string
+          liked_quotos?: string[] | null
           preferences?: string[] | null
           role?: string | null
           settings?: Json | null
+          subscription_plan?: string | null
           updated_at?: string | null
         }
         Relationships: []

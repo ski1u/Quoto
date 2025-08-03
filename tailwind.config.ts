@@ -14,10 +14,20 @@ const config = {
   		center: true,
   		padding: '2rem',
   		screens: {
-  			'2xl': '1400px'
-  		}
+			'2xl': '1400px',
+		  }
   	},
   	extend: {
+		screens: {
+			'xs': '360px',       // small phones (e.g., older iPhones)
+			'sm': '640px',       // standard phones
+			'md': '768px',       // tablets (e.g., iPad Mini)
+			'lg': '1024px',      // small laptops, iPad landscape
+			'xl': '1280px',      // laptops / desktop monitors
+			'2xl': '1400px',     // large desktops
+			'3xl': '1600px',     // extra-wide monitors
+			'4xl': '1920px',     // full HD & beyond
+		},
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
@@ -58,7 +68,7 @@ const config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

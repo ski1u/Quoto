@@ -2,8 +2,8 @@
 
 import React from 'react'
 
-import AuthPages from '@/components/ui/auth-pages'
-import AuthPageSide from '@/components/ui/auth-page-side'
+import AuthPages from '@/components/ui/auth/auth-pages'
+import AuthPageSide from '@/components/ui/auth/auth-page-side'
 
 import { z } from "zod"
 import { signInAction } from '../actions'

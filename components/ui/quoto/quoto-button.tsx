@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 
-import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription, DialogHeader } from './dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
-import TagInput from './tag-input'
-import { Textarea } from './textarea'
-import { Button } from './button'
-import { Checkbox } from './checkbox'
+import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription, DialogHeader } from '../dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../form'
+import TagInput from '../tag-input'
+import { Textarea } from '../textarea'
+import { Button } from '../button'
+import { Checkbox } from '../checkbox'
 
 import { z } from "zod"
 import { cn } from '@/lib/utils'

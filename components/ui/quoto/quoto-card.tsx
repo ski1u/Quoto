@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react'
 
-import { Avatar, AvatarFallback } from './avatar'
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Avatar, AvatarFallback } from '../avatar'
+import { Popover, PopoverContent, PopoverTrigger } from '../popover'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
-import { Dialog, DialogTrigger } from './dialog'
-import { Card } from './card'
-import { Badge } from './badge'
-import { Button } from './button'
+import { Dialog, DialogTrigger } from '../dialog'
+import { Card } from '../card'
+import { Badge } from '../badge'
+import { Button } from '../button'
 import { QuotoButtonContent } from './quoto-button'
 
 import { toast } from 'sonner'

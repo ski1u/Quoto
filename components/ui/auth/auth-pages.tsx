@@ -3,11 +3,11 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-import { Form, FormField, FormItem, FormControl, FormMessage } from './form'
-import { Button } from './button'
-import { Input } from './input'
-import OAuthButton from './oauth-button'
-import { SpinningLoader } from './loading-screen'
+import { Form, FormField, FormItem, FormControl, FormMessage } from '../form'
+import { Button } from '../button'
+import { Input } from '../input'
+import OAuthButton from '../oauth-button'
+import { SpinningLoader } from '../loading-screen'
 
 import { z } from "zod"
 import { ZodSchema } from 'zod'

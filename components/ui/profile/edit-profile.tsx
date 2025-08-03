@@ -4,11 +4,11 @@ import React, { useEffect } from 'react'
 
 import useLoader from '@/hooks/useLoader'
 
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
-import { Input } from './input'
-import { Textarea } from './textarea'
-import { Button } from './button'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../form'
+import { Input } from '../input'
+import { Textarea } from '../textarea'
+import { Button } from '../button'
 import { toast } from 'sonner'
 
 import { profile_form_schema, useProfileForm } from '@/data/profile-form-data'

@@ -2,11 +2,10 @@
 
 import React, { use } from 'react'
 
-import MainQuoto from '@/components/ui/main-quoto'
+import MainQuoto from '@/components/ui/quoto/main-quoto'
 
 import { notFound } from 'next/navigation'
 
-import { getQuotoFromId } from '@/utils/data/quotos'
 import { useQuotos } from '@/hooks/useQuotos'
 
 import { Quoto } from '@/data/quotos'

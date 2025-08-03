@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 
 import LoadingScreen from '@/components/ui/loading-screen'
-import Profile from '@/components/ui/profile'
+import Profile from '@/components/ui/profile/profile'
 
 import { UserFetchType, fetchUser } from '@/lib/fetchUser'
 

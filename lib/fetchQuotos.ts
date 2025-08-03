@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
-import { quotoInit } from "@/app/api/graphql/schema/type";
+import { Quoto } from "@/data/quotos";
 
 // --- Options Interface ---
 export interface FetchQuotosOptions {
@@ -17,7 +17,7 @@ export async function fetchQuotos({
   searchTerm,
   featuredOnly = false,
   userId,
-}: FetchQuotosOptions): Promise<quotoInit[]> {
+}: FetchQuotosOptions): Promise<Quoto[]> {
   const supabase = createClient()
   let query = supabase.from("quotos").select("*")
 

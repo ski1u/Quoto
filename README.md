@@ -9,11 +9,10 @@ Filter Button
 Revamping
 - code optimiziation and best practices
 - optimistic ui
-- file organization
 - responsive layout
-- delete unnecessary files (graphql)
 - route url best practices
+- skeleton loading
 
 errors
-- when signing in for the first tine or creating a new account and getting redirected to the main page, encounters an error where author is undefined
-- whenever the user tries to go beyond /main, they get redirected back to /main again immediately
+- when signing in for the first time or creating a new account and getting redirected to the main page, encounters an error where author is undefined
+- optimistic ui delay

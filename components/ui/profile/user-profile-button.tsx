@@ -2,11 +2,11 @@
 
 import React from 'react'
 
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
-import { Avatar, AvatarFallback } from './avatar'
-import { Button } from './button'
-import { TooltipProvider } from './tooltip'
-import { TooltipButton } from './quoto-card'
+import { Popover, PopoverContent, PopoverTrigger } from '../popover'
+import { Avatar, AvatarFallback } from '../avatar'
+import { Button } from '../button'
+import { TooltipProvider } from '../tooltip'
+import { TooltipButton } from '../quoto/quoto-card'
 
 import { LogOut, User } from 'lucide-react'
 
@@ -25,7 +25,7 @@ const UserProfileButton = ({ author, user_id, className } : {
         <PopoverTrigger className={cn('absolute right-12', className)}>
             <Avatar
                 className='w-8 h-8 text-sm font-medium shadow-lg drop-shadow-md'
-            ><AvatarFallback>{author.split(' ').map(word => word[0]).join('').toUpperCase()}</AvatarFallback></Avatar>
+            ><AvatarFallback>{(author || "").split(' ').map(word => word[0]).join('').toUpperCase()}</AvatarFallback></Avatar>
         </PopoverTrigger>
 
         <PopoverContent

@@ -66,4 +66,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  transition {
+    @apply transition-all duration-300
+  }
 }
