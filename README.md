@@ -12,6 +12,9 @@ Revamping
 - responsive layout
 - route url best practices
 - skeleton loading
+- ui/ux optimizing
+- interactions (commenting, emojis, ...)
+- searchbar recommendations (also for tags)
 
 errors
 - when signing in for the first time or creating a new account and getting redirected to the main page, encounters an error where author is undefined
