@@ -8,7 +8,7 @@ import TagInput from '../tag-input'
 import { Textarea } from '../textarea'
 import { Button } from '../button'
 import { Checkbox } from '../checkbox'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '../sheet'
+import { Sheet } from "react-modal-sheet"
 
 import { z } from "zod"
 import { cn } from '@/lib/utils'
@@ -141,7 +141,7 @@ const QuotoForm = ({ form, args, mode, onSuccess }: {
                 />
 
                 <Button
-                    className='w-1/3 mt-4 bg-[#438037]'
+                    className='w-1/3 mt-4'
                     type='submit'
                     disabled={loading}
                 >{isEditing ? "Update" : "Post"}</Button>
@@ -175,18 +175,19 @@ export const QuotoButtonContent = ({ type, mode, args, className, form, onSucces
             <QuotoForm form={form} mode={mode} args={args} onSuccess={onSuccess} />
         </DialogContent>
     ) : (
-        <SheetContent side="bottom">
-            <SheetHeader className='mb-4 gap-0 space-y-0'>
-                <SheetTitle className='text-left'>
-                    {isCreating ? "Create a Quoto" : "Edit a Quoto"}
-                </SheetTitle>
-                <SheetDescription className='text-left'>
+        <Sheet.Container className='px-8 py-4'>
+            <div className='w-full flex justify-center items-center mb-4'><div className='border-2 w-1/4 rounded-full shadow-2xl' /></div>
+            <Sheet.Header className='mb-4 gap-0 space-y-0'>
+                <h1 className='text-left font-semibold tracking-tight'>{isCreating ? "Create a Quoto" : "Edit a Quoto"}</h1>
+                <p className='text-left text-sm text-gray-500'>
                     {isCreating ? "Got an inspirational quote, mantra, or verse to share?" : "Mistakes made? No problem."}
-                </SheetDescription>
-            </SheetHeader>
+                </p>
+            </Sheet.Header>
 
-            <QuotoForm form={form} mode={mode} args={args} onSuccess={onSuccess} />
-        </SheetContent>
+            <Sheet.Content>
+                <QuotoForm form={form} mode={mode} args={args} onSuccess={onSuccess} />
+            </Sheet.Content>
+        </Sheet.Container>
     )
 }
 

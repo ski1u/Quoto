@@ -6,7 +6,7 @@ Workmap
 Filter Button
 - on select value change, filter the quotos based on its value
 
-Revamping (now primarily designing for mobile-first)
+Revamping (now primarily designing for mobile-first) -> react native
 - code optimiziation and best practices
 - optimistic ui
 - responsive layout
