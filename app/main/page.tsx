@@ -7,6 +7,7 @@ import QuotoButton from '@/components/ui/quoto/quoto-button'
 import Searchbar from '@/components/ui/searchbar'
 import UserProfileButton from '@/components/ui/profile/user-profile-button'
 import { SpinningLoader } from '@/components/ui/loading-screen'
+import FAB from '@/components/ui/fab'
 
 import { useQuotos } from '@/hooks/useQuotos'
 import { useAuth } from '@/components/AuthProvider'
@@ -88,6 +89,8 @@ const Main = () => {
       )}
 
       <div ref={ref} className='h-24' />
+
+      <FAB  />
     </div>
   )
 }
